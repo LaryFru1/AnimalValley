@@ -14,5 +14,5 @@ document.getElementById('signup-form').addEventListener('submit', function(e){
   };
 
   console.log('Cadastro (ainda local, sem salvar de verdade):', dados);
-  alert('Cadastro preenchido! Quando ligarmos o Supabase, isso vai ser salvo de verdade.');
+  window.location.href = 'inicio.html';
 });
