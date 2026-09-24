@@ -6,5 +6,5 @@ document.getElementById('login-form').addEventListener('submit', function(e){
 });
 
 document.getElementById('go-signup').addEventListener('click', function(){
-  alert('Aqui depois vamos abrir a tela de cadastro.');
+  window.location.href = 'cadastro.html';
 });

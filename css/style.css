@@ -65,3 +65,9 @@ body{
   font-weight:600;
   cursor:pointer;
 }
+.section-label{
+  font-size:12px;
+  font-weight:700;
+  color:var(--ink-soft);
+  margin:18px 0 4px;
+}
