@@ -30,5 +30,5 @@ document.getElementById('nav-home').addEventListener('click', function(){
 });
 
 document.getElementById('nav-conta').addEventListener('click', function(){
-  alert('Aqui depois vamos abrir a tela "Minha conta".');
+  window.location.href = 'conta.html';
 });

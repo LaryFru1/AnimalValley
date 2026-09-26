@@ -91,6 +91,20 @@ document.getElementById('toggle-forma').addEventListener('click', function(e){
 
 document.getElementById('btn-voltar').addEventListener('click', () => window.location.href = 'servico.html');
 document.getElementById('btn-continuar').addEventListener('click', () => {
-  sessionStorage.setItem('banhoTosaEscolhidos', JSON.stringify([...selecionados]));
+  const forma = formaAtual();
+  let resumo, preco;
+
+  if (forma === 'pacote') {
+    resumo = `Pacote (porte ${porte})`;
+    preco = 'R$ ' + precos.pacote;
+  } else {
+    const nomes = { banho:'Banho', banhoTosaMaquina:'Banho+Tosa Máquina', banhoTosaTesoura:'Banho+Tosa Tesoura', tosaHigienica:'Tosa Higiênica', tosaTesoura:'Tosa Tesoura', tosaMaquina:'Tosa Máquina', hidratSimples:'Hidratação Simples', hidratPremium:'Hidratação Premium' };
+    resumo = [...selecionados].map(c => nomes[c]).join(' + ') || 'Nenhum item selecionado';
+    preco = document.getElementById('total').textContent;
+  }
+
+  sessionStorage.setItem('servicoResumo', resumo);
+  sessionStorage.setItem('servicoPreco', preco);
+  sessionStorage.removeItem('servicoResumo_direto');
   window.location.href = 'dia-hora.html';
 });

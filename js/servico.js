@@ -3,7 +3,10 @@ document.getElementById('step-hint').textContent = `Passo 2 de 5 · Para ${petEs
 
 function irPara(el){
   const nomeServico = el.querySelector('.name').textContent;
-  sessionStorage.setItem('servicoEscolhido', nomeServico);
+  const precoTexto = el.querySelector('.meta').textContent;
+  sessionStorage.setItem('servicoResumo', nomeServico);
+  sessionStorage.setItem('servicoPreco', precoTexto);
+  sessionStorage.removeItem('banhoTosaResumo'); // limpa resíduo de uma escolha anterior
 
   if (el.dataset.tipo === 'banho') {
     window.location.href = 'banho-tosa.html';

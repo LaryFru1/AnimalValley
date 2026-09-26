@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Animal Valley — Confirmar</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="screen">
+    <div class="back-row">
+      <button class="back-btn" id="btn-voltar">←</button>
+      <div>
+        <div class="step-title">Confirmar pré-agendamento</div>
+        <div class="step-hint">Passo 5 de 5</div>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="section-label" style="margin-top:0">Forma de pagamento</div>
+      <div class="toggle-row" id="toggle-pagamento">
+        <div class="toggle-opt picked" data-value="particular">Particular</div>
+        <div class="toggle-opt" data-value="convenio">Usar convênio</div>
+      </div>
+
+      <div class="summary-card" style="margin-top:12px">
+        <div class="summary-row"><span>Pet</span><span id="r-pet"></span></div>
+        <div class="summary-row"><span>Serviço</span><span id="r-servico"></span></div>
+        <div class="summary-row"><span>Dia</span><span id="r-dia"></span></div>
+        <div class="summary-row"><span>Horário</span><span id="r-hora"></span></div>
+        <div class="summary-row" id="linha-valor"><span>Total estimado</span><span id="r-valor"></span></div>
+        <span class="status-chip">● Aguardando confirmação da clínica</span>
+      </div>
+
+      <div class="banner-note" id="nota-particular">O pagamento é feito na clínica, na hora — o app só mostra a estimativa. É um <b>pré-agendamento</b>: a recepção confirma no painel dela.</div>
+      <div class="banner-note" style="display:none;background:#EAF6EC;border-color:#BFE3C5;color:#1B6B2A" id="nota-convenio">Como você optou por usar o convênio, o valor é confirmado diretamente com o seu convênio e cobrado na recepção no dia do atendimento — por isso não mostramos o preço aqui.</div>
+
+      <button class="whatsapp-btn" id="btn-enviar">Enviar pré-agendamento</button>
+    </div>
+  </div>
+
+  <script src="js/confirmar.js"></script>
+</body>
+</html>

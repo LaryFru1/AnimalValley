@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Animal Valley — Minha conta</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="screen">
+    <div class="topbar">
+      <div class="brand">Minha conta</div>
+      <div class="sub" id="nome-usuario">Ana Souza</div>
+    </div>
+
+    <div class="body">
+      <div class="section-label" style="margin-top:0">Meus pacotes</div>
+      <div class="pkg-card">
+        <div class="pkg-name">Banho e Tosa — porte P</div>
+        <div class="pkg-track">
+          <div class="pkg-dot used"></div>
+          <div class="pkg-dot used"></div>
+          <div class="pkg-dot"></div>
+          <div class="pkg-dot"></div>
+        </div>
+        <div class="pkg-meta">2 de 4 usados · válido até 15/11</div>
+      </div>
+
+      <div class="section-label">Histórico de agendamentos</div>
+      <div id="lista-historico"></div>
+
+      <div class="section-label">Comunidade</div>
+      <div class="wa-card">
+        <div><div class="name">Comunidade Animal Valley</div><div class="meta">Avisos e novidades no WhatsApp</div></div>
+        <button class="wa-mini" id="btn-comunidade">Entrar</button>
+      </div>
+    </div>
+
+    <div class="nav-tabs">
+      <div class="nt" id="nav-home">🏠 Início</div>
+      <div class="nt" id="nav-pets">🐾 Pets</div>
+      <div class="nt active">👤 Conta</div>
+    </div>
+  </div>
+
+  <script src="js/conta.js"></script>
+</body>
+</html>
