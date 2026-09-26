@@ -22,7 +22,7 @@ pets.forEach(pet => {
 });
 
 document.getElementById('btn-add-pet').addEventListener('click', function(){
-  alert('Aqui depois vamos abrir a tela de adicionar um novo pet.');
+  window.location.href = 'adicionar-pet.html';
 });
 
 document.getElementById('nav-home').addEventListener('click', function(){

@@ -2,7 +2,7 @@
 document.getElementById('saudacao').textContent = 'Olá, Ana 👋';
 
 document.getElementById('btn-agendar').addEventListener('click', function(){
-  alert('Aqui depois vamos abrir a tela de escolher o pet.');
+  window.location.href = 'escolher-pet.html';
 });
 
 document.getElementById('btn-comunidade').addEventListener('click', function(){

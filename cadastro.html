@@ -25,9 +25,9 @@
 
       <div class="section-label">Você (responsável)</div>
       <label class="field">CPF</label>
-      <input type="text" id="su-cpf" class="field-input" placeholder="000.000.000-00" required>
+<input type="text" id="su-cpf" class="field-input" placeholder="000.000.000-00" maxlength="14" required>
       <label class="field">Data de nascimento</label>
-      <input type="date" id="su-nascimento" class="field-input" required>
+<input type="text" id="su-nascimento" class="field-input" placeholder="dd/mm/aaaa" maxlength="10" required>
 
       <div class="section-label">Seu pet tem convênio? <span class="opt">(opcional)</span></div>
       <div class="toggle-row" id="toggle-convenio">
@@ -70,8 +70,8 @@
           <input type="number" step="0.1" id="pet-peso" class="field-input" placeholder="Ex: 4.2" required>
         </div>
         <div>
-          <label class="field">Nascimento</label>
-          <input type="date" id="pet-nascimento" class="field-input">
+          <label class="field">Data de nascimento</label>
+<input type="text" id="pet-nascimento" class="field-input" placeholder="dd/mm/aaaa" maxlength="10" required>
         </div>
       </div>
 

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Animal Valley — Banho e Tosa</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="screen">
+    <div class="back-row">
+      <button class="back-btn" id="btn-voltar">←</button>
+      <div>
+        <div class="step-title" id="titulo">Banho e tosa</div>
+        <div class="step-hint">Passo 3 de 5 · Escolha um ou mais</div>
+      </div>
+    </div>
+
+    <div class="body" id="lista-itens"></div>
+<div class="body" id="info-pacote" style="display:none;padding-top:0">
+  <div class="pkg-card">
+    <div class="pkg-name" id="pkg-nome">Pacote — porte P</div>
+    <div class="pkg-meta">Inclui 4 banhos + 1 tosa higiênica · validade de 1 mês para usar</div>
+  </div>
+</div>
+
+    <div class="body" style="padding-top:0">
+      <div class="toggle-row" id="toggle-forma">
+        <div class="toggle-opt picked" data-value="avulso">Avulso</div>
+        <div class="toggle-opt" data-value="pacote">Usar pacote</div>
+      </div>
+    </div>
+
+    <div class="body" style="padding-top:0">
+  <div class="banner-note">Os valores são uma <b>estimativa</b>. O peso do pet é confirmado presencialmente no dia do atendimento, e o valor final pode ser ajustado caso o peso informado esteja diferente do real.</div>
+</div>
+
+    <div class="bottom-bar">
+      <div class="total-row"><span>Total selecionado</span><span id="total">R$ 0</span></div>
+      <button class="next-btn" id="btn-continuar">Continuar</button>
+    </div>
+  </div>
+
+  <script src="js/banho-tosa.js"></script>
+</body>
+</html>

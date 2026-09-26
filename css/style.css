@@ -146,3 +146,28 @@ body{
 .doc-ic{font-size:18px}
 .doc-name{font-size:12.5px;font-weight:600;color:var(--teal-900)}
 .doc-meta{font-size:10.5px;color:var(--ink-soft);margin-top:1px}
+.back-row{display:flex;align-items:center;gap:10px;padding:16px 18px 4px}
+.back-btn{width:30px;height:30px;border-radius:50%;background:var(--pink-100);color:var(--pink-600);border:none;font-size:14px;cursor:pointer}
+.step-title{font-size:15px;font-weight:700;color:var(--teal-900)}
+.step-hint{font-size:11.5px;color:var(--ink-soft);margin-top:1px}
+.bottom-bar{padding:12px 18px;border-top:1px solid var(--line)}
+.next-btn{width:100%;background:var(--teal-900);color:#fff;border:none;padding:12px;border-radius:12px;font-weight:700;font-size:13.5px;cursor:pointer}
+.next-btn:disabled{background:#C9CCCB;cursor:not-allowed}
+.pet-item.picked{border-color:var(--pink-600);background:var(--pink-100)}
+.pet-check{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);flex-shrink:0}
+.pet-item.picked .pet-check{background:var(--pink-600);border-color:var(--pink-600)}
+.svc-item, .wa-card{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 13px;border:1px solid var(--line);border-radius:14px;
+  margin-bottom:8px;cursor:pointer;background:var(--paper);
+}
+.svc-item .name, .wa-card .name{font-size:13px;font-weight:600;color:var(--teal-900)}
+.svc-item .meta, .wa-card .meta{font-size:10.5px;color:var(--ink-soft);margin-top:2px}
+.wa-mini{background:#22B24C;color:#fff;border:none;padding:8px 12px;border-radius:9px;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0}
+.banner-note{
+  margin:10px 0;background:#FFF7E6;border:1px solid #F1D9A0;
+  border-radius:12px;padding:9px 11px;font-size:11px;color:#7A5B12;line-height:1.5;
+}
+.total-row{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;color:var(--teal-900);margin-bottom:8px}
+.check-sq{width:18px;height:18px;border-radius:5px;border:2px solid var(--line);flex-shrink:0}
+.svc-item.picked .check-sq{background:var(--pink-600);border-color:var(--pink-600)}

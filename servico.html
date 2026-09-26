@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Animal Valley — Serviço</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="screen">
+    <div class="back-row">
+      <button class="back-btn" id="btn-voltar">←</button>
+      <div>
+        <div class="step-title">Qual serviço?</div>
+        <div class="step-hint" id="step-hint">Passo 2 de 5</div>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="svc-item" data-tipo="banho" onclick="irPara(this)">
+        <div><div class="name">Banho e tosa</div><div class="meta">Escolha o tipo e o tamanho</div></div>
+      </div>
+      <div class="svc-item" data-tipo="direto" onclick="irPara(this)">
+        <div><div class="name">Consulta veterinária</div><div class="meta">R$ 120</div></div>
+      </div>
+      <div class="svc-item" data-tipo="direto" onclick="irPara(this)">
+        <div><div class="name">Vacinas</div><div class="meta">V3, antirrábica, V8, Giardia, gripe canina</div></div>
+      </div>
+      <div class="svc-item" data-tipo="direto" onclick="irPara(this)">
+        <div><div class="name">Exames de sangue / coletas</div><div class="meta">a partir de R$ 180</div></div>
+      </div>
+      <div class="svc-item" data-tipo="direto" onclick="irPara(this)">
+        <div><div class="name">Eletrocardiograma</div><div class="meta">R$ 150</div></div>
+      </div>
+      <div class="svc-item" data-tipo="direto" onclick="irPara(this)">
+        <div><div class="name">Pressão arterial</div><div class="meta">R$ 100</div></div>
+      </div>
+      <div class="svc-item" data-tipo="direto" onclick="irPara(this)">
+        <div><div class="name">Curativo</div><div class="meta">a partir de R$ 50</div></div>
+      </div>
+      <div class="svc-item" data-tipo="direto" onclick="irPara(this)">
+        <div><div class="name">Fluidoterapia</div><div class="meta">a partir de R$ 150</div></div>
+      </div>
+      <div class="svc-item" data-tipo="direto" onclick="irPara(this)">
+        <div><div class="name">Atestado de viagem nacional</div><div class="meta">R$ 120</div></div>
+      </div>
+      <div class="svc-item" data-tipo="direto" onclick="irPara(this)">
+        <div><div class="name">Aplicações de medicações</div><div class="meta">a partir de R$ 50</div></div>
+      </div>
+
+      <div class="banner-note"><b>Cirurgias, exames de imagem (ultrassom, raio-X, ecocardiograma), endoscopia, procedimentos e consultas com especialistas</b> exigem uma equipe específica e ainda não dá pra agendar direto por aqui.</div>
+
+      <div class="wa-card">
+        <div><div class="name">Cirurgias e emergências</div><div class="meta">Fale com a recepção</div></div>
+        <button class="wa-mini" onclick="abrirWhatsApp()">WhatsApp</button>
+      </div>
+      <div class="wa-card">
+        <div><div class="name">Exames de imagem e procedimentos</div><div class="meta">Ultrassom, raio-X, endoscopia e mais</div></div>
+        <button class="wa-mini" onclick="abrirWhatsApp()">WhatsApp</button>
+      </div>
+      <div class="wa-card">
+        <div><div class="name">Especialistas</div><div class="meta">Dermato, cardio, oftalmo e mais</div></div>
+        <button class="wa-mini" onclick="abrirWhatsApp()">WhatsApp</button>
+      </div>
+
+      <button class="ghost-btn" onclick="abrirWhatsApp()">Não encontrou o que procurava? Fale conosco no WhatsApp</button>
+    </div>
+  </div>
+
+  <script src="js/servico.js"></script>
+</body>
+</html>
