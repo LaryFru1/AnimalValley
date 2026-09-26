@@ -5,6 +5,7 @@ function irPara(el){
   const nomeServico = el.querySelector('.name').textContent;
   const precoTexto = el.querySelector('.meta').textContent;
   sessionStorage.setItem('servicoResumo', nomeServico);
+  sessionStorage.setItem('tipoServico', el.dataset.tipo === 'banho' ? 'banho' : 'direto');
   sessionStorage.setItem('servicoPreco', precoTexto);
   sessionStorage.removeItem('banhoTosaResumo'); // limpa resíduo de uma escolha anterior
 

@@ -20,3 +20,4 @@ document.getElementById('btn-comunidade').addEventListener('click', () => {
 
 document.getElementById('nav-home').addEventListener('click', () => window.location.href = 'inicio.html');
 document.getElementById('nav-pets').addEventListener('click', () => window.location.href = 'meus-pets.html');
+document.getElementById('btn-config').addEventListener('click', () => window.location.href = 'configuracoes.html');

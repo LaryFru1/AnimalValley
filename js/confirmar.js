@@ -1,3 +1,7 @@
+if (sessionStorage.getItem('tipoServico') === 'banho') {
+  document.getElementById('bloco-pagamento').style.display = 'none';
+}
+
 document.getElementById('r-pet').textContent = sessionStorage.getItem('petEscolhido') || '—';
 document.getElementById('r-servico').textContent = sessionStorage.getItem('servicoResumo') || '—';
 document.getElementById('r-dia').textContent = 'Dia ' + (sessionStorage.getItem('diaEscolhido') || '—');

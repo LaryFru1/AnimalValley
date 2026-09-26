@@ -91,6 +91,7 @@ document.getElementById('toggle-forma').addEventListener('click', function(e){
 
 document.getElementById('btn-voltar').addEventListener('click', () => window.location.href = 'servico.html');
 document.getElementById('btn-continuar').addEventListener('click', () => {
+    sessionStorage.setItem('tipoServico', 'banho');
   const forma = formaAtual();
   let resumo, preco;
 

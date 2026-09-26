@@ -191,3 +191,16 @@ body{
 .hist-item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:12px}
 .st-ok{color:#22B24C;font-weight:700}
 .st-wait{color:var(--pink-600);font-weight:700}
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(18,59,82,.45);
+  display:flex;align-items:center;justify-content:center;z-index:50;padding:20px;
+}
+.modal-box{
+  background:#fff;border-radius:18px;padding:20px;width:100%;max-width:340px;
+}
+.motivo-lista{margin:12px 0}
+.motivo-item{
+  display:block;padding:10px;border:1px solid var(--line);border-radius:10px;
+  margin-bottom:8px;font-size:13px;cursor:pointer;
+}
+.motivo-item input{margin-right:8px}
