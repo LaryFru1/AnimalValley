@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Animal Valley — Dia e Hora</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="screen">
+    <div class="back-row">
+      <button class="back-btn" id="btn-voltar">←</button>
+      <div>
+        <div class="step-title">Dia e horário</div>
+        <div class="step-hint">Passo 4 de 5</div>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="day-strip" id="dias"></div>
+      <div class="time-grid" id="horarios"></div>
+      <div class="banner-note">Horários "cheios" foram bloqueados pela recepção — inclusive os marcados por telefone.</div>
+    </div>
+
+    <div class="bottom-bar">
+      <button class="next-btn" id="btn-continuar" disabled>Continuar</button>
+    </div>
+  </div>
+
+  <script src="js/dia-hora.js"></script>
+</body>
+</html>
