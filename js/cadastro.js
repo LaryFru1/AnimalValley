@@ -1,3 +1,5 @@
+import { supabase } from './supabase-client.js';
+
 // Toggle: convênio
 document.getElementById('toggle-convenio').addEventListener('click', function(e){
   const opt = e.target.closest('.toggle-opt');
@@ -39,6 +41,11 @@ function dataValida(dataTexto){
   return true;
 }
 
+function converterData(dataTexto){
+  const [dia, mes, ano] = dataTexto.split('/');
+  return `${ano}-${mes}-${dia}`;
+}
+
 
 
 // Máscara + validação simples de CPF
@@ -55,45 +62,73 @@ function cpfValido(cpf){
   return /^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(cpf);
 }
 
-document.getElementById('signup-form').addEventListener('submit', function(e){
+document.getElementById('signup-form').addEventListener('submit', async function(e){
   e.preventDefault();
+
   if (!cpfValido(document.getElementById('su-cpf').value)) {
-  alert('CPF inválido. Use o formato 000.000.000-00.');
-  return;
-}
-if (!dataValida(document.getElementById('su-nascimento').value)) {
-  alert('Data de nascimento inválida. Use o formato dd/mm/aaaa.');
-  return;
-}
-if (!dataValida(document.getElementById('pet-nascimento').value)) {
-  alert('Data de nascimento do pet inválida. Use o formato dd/mm/aaaa.');
-  return;
-}
+    alert('CPF inválido. Use o formato 000.000.000-00.');
+    return;
+  }
+  if (!dataValida(document.getElementById('su-nascimento').value)) {
+    alert('Data de nascimento inválida. Use o formato dd/mm/aaaa.');
+    return;
+  }
+  if (!dataValida(document.getElementById('pet-nascimento').value)) {
+    alert('Data de nascimento do pet inválida. Use o formato dd/mm/aaaa.');
+    return;
+  }
+
+  const email = document.getElementById('su-email').value;
+  const senha = document.getElementById('su-senha').value;
+
+  // 1. Cria o login (usuário e senha) no Supabase Auth
+  const { data: authData, error: authError } = await supabase.auth.signUp({
+    email: email,
+    password: senha
+  });
+
+  if (authError) {
+    alert('Erro ao criar conta: ' + authError.message);
+    return;
+  }
+
+  const userId = authData.user.id;
+
+  // 2. Salva os dados do responsável, ligados a esse login
+  const { error: erroResponsavel } = await supabase.from('responsaveis').insert({
+    id: userId,
+    nome: document.getElementById('su-nome').value,
+    telefone: document.getElementById('su-telefone').value,
+    cpf: document.getElementById('su-cpf').value,
+    data_nascimento: converterData(document.getElementById('su-nascimento').value)
+  });
+
+  if (erroResponsavel) {
+    alert('Erro ao salvar seus dados: ' + erroResponsavel.message);
+    return;
+  }
 
   const temConvenio = document.querySelector('#toggle-convenio .toggle-opt.picked').dataset.value === 'sim';
   const castrado = document.querySelector('#toggle-castrado .toggle-opt.picked').dataset.value === 'sim';
 
-  const dados = {
-    responsavel: {
-      nome: document.getElementById('su-nome').value,
-      telefone: document.getElementById('su-telefone').value,
-      senha: document.getElementById('su-senha').value,
-      cpf: document.getElementById('su-cpf').value,
-      nascimento: document.getElementById('su-nascimento').value
-    },
-    pet: {
-      nome: document.getElementById('pet-nome').value,
-      raca: document.getElementById('pet-raca').value,
-      sexo: document.getElementById('pet-sexo').value,
-      microchip: document.getElementById('pet-microchip').value,
-      peso: document.getElementById('pet-peso').value,
-      nascimento: document.getElementById('pet-nascimento').value,
-      castrado: castrado,
-      convenio: temConvenio ? document.getElementById('pet-convenio-nome').value : null,
-      foto: document.getElementById('pet-foto').files[0] || null
-    }
-  };
+  // 3. Salva o pet, ligado ao mesmo responsável
+  const { error: erroPet } = await supabase.from('pets').insert({
+    responsavel_id: userId,
+    nome: document.getElementById('pet-nome').value,
+    raca: document.getElementById('pet-raca').value,
+    sexo: document.getElementById('pet-sexo').value,
+    microchip: document.getElementById('pet-microchip').value || null,
+    peso: parseFloat(document.getElementById('pet-peso').value),
+    data_nascimento: converterData(document.getElementById('pet-nascimento').value),
+    castrado: castrado,
+    convenio_nome: temConvenio ? document.getElementById('pet-convenio-nome').value : null
+  });
 
-  console.log('Cadastro (ainda local, sem salvar de verdade):', dados);
+  if (erroPet) {
+    alert('Erro ao salvar o pet: ' + erroPet.message);
+    return;
+  }
+
+  alert('Conta criada com sucesso!');
   window.location.href = 'inicio.html';
 });
