@@ -14,19 +14,20 @@
     </div>
 
     <form id="login-form" class="body">
-      <label class="field">Telefone ou e-mail</label>
-      <input type="text" id="login-user" class="field-input" placeholder="(11) 90000-0000">
+      <label class="field">E-mail</label>
+      <input type="email" id="login-user" class="field-input" placeholder="seuemail@exemplo.com">
 
       <label class="field">Senha</label>
       <input type="password" id="login-pass" class="field-input" placeholder="••••••••">
 
-      <button type="submit" class="cta-btn">Entrar</button>
-    </form>
-
+     <div style="text-align:right;margin-top:8px">
+  <button type="button" id="btn-esqueci" style="background:none;border:none;color:var(--ink-soft);font-size:11.5px;cursor:pointer;padding:0">Esqueci minha senha</button>
+</div>
+<button type="submit" class="cta-btn">Entrar</button>
     <div class="divider">ou</div>
     <button class="ghost-btn" id="go-signup">Criar minha conta</button>
   </div>
 
-  <script src="js/script.js"></script>
+  <script type="module" src="js/script.js"></script>
 </body>
 </html>

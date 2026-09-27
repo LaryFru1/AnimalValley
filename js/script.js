@@ -1,8 +1,36 @@
-document.getElementById('login-form').addEventListener('submit', function(e){
+import { supabase } from './supabase-client.js';
+
+document.getElementById('login-form').addEventListener('submit', async function(e){
   e.preventDefault();
-  const user = document.getElementById('login-user').value;
-  console.log('Tentando entrar com:', user);
-  // Por enquanto não faz login de verdade — isso vem quando ligarmos o Supabase.
+  const email = document.getElementById('login-user').value;
+  const senha = document.getElementById('login-pass').value;
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email: email,
+    password: senha
+  });
+
+  if (error) {
+    alert('Não foi possível entrar: ' + error.message);
+    return;
+  }
+
+  window.location.href = 'inicio.html';
+});
+
+document.getElementById('btn-esqueci').addEventListener('click', async function(){
+  const email = prompt('Digite seu e-mail cadastrado:');
+  if (!email) return;
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + '/redefinir-senha.html'
+  });
+
+  if (error) {
+    alert('Erro: ' + error.message);
+  } else {
+    alert('Enviamos um e-mail com um link para você redefinir sua senha!');
+  }
 });
 
 document.getElementById('go-signup').addEventListener('click', function(){

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Animal Valley — Redefinir senha</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="screen">
+    <div class="topbar">
+      <div class="brand">Animal <span>Valley</span></div>
+      <div class="sub">Criar nova senha</div>
+    </div>
+
+    <form id="form-redefinir" class="body">
+      <label class="field">Nova senha</label>
+      <input type="password" id="nova-senha" class="field-input" placeholder="••••••••" required minlength="6">
+
+      <label class="field">Confirme a nova senha</label>
+      <input type="password" id="confirma-senha" class="field-input" placeholder="••••••••" required minlength="6">
+
+      <button type="submit" class="cta-btn">Salvar nova senha</button>
+    </form>
+  </div>
+
+  <script type="module" src="js/redefinir-senha.js"></script>
+</body>
+</html>
