@@ -5,13 +5,26 @@ document.getElementById('login-form').addEventListener('submit', async function(
   const email = document.getElementById('login-user').value;
   const senha = document.getElementById('login-pass').value;
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email: email,
     password: senha
   });
 
   if (error) {
     alert('Não foi possível entrar: ' + error.message);
+    return;
+  }
+
+  // Conta desativada não entra
+  const { data: resp } = await supabase
+    .from('responsaveis')
+    .select('status')
+    .eq('id', data.user.id)
+    .single();
+
+  if (resp && resp.status === 'desativado') {
+    await supabase.auth.signOut();
+    alert('Este cadastro foi desativado. Para reativar, entre em contato com a clínica.');
     return;
   }
 

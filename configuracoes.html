@@ -19,29 +19,23 @@
     <div class="body">
       <div class="section-label" style="margin-top:0">Seus dados</div>
       <form id="form-dados">
-        <label class="field">Nome</label>
-        <input type="text" id="cfg-nome" class="field-input" value="Ana Souza">
+        <label class="field">Nome completo</label>
+        <input type="text" id="cfg-nome" class="field-input" required>
+
         <label class="field">Telefone / WhatsApp</label>
-<input type="tel" id="cfg-telefone" class="field-input" value="(11) 99999-9999">
+        <input type="tel" id="cfg-telefone" class="field-input" required>
 
-<label class="field">CPF</label>
-<input type="text" id="cfg-cpf" class="field-input" value="123.456.789-00" maxlength="14">
+        <label class="field">CPF</label>
+        <input type="text" id="cfg-cpf" class="field-input" maxlength="14" required>
 
-<label class="field">Data de nascimento</label>
-<input type="text" id="cfg-nascimento" class="field-input" placeholder="dd/mm/aaaa" maxlength="10" value="01/01/1990">
-
-<div class="section-label">Convênio do pet</div>
-        <div class="toggle-row" id="toggle-convenio-cfg">
-          <div class="toggle-opt" data-value="nao">Não tenho</div>
-          <div class="toggle-opt picked" data-value="sim">Sim, tenho</div>
-        </div>
-        <input type="text" id="cfg-convenio-nome" class="field-input" style="margin-top:8px" value="Pet Love">
-
-        <label class="field">Nº do microchip <span class="opt">(se tiver)</span></label>
-        <input type="text" id="cfg-microchip" class="field-input" placeholder="Ex: 900000000000000">
+        <label class="field">Data de nascimento</label>
+        <input type="text" id="cfg-nascimento" class="field-input" placeholder="dd/mm/aaaa" maxlength="10" required>
 
         <button type="submit" class="cta-btn">Salvar alterações</button>
       </form>
+
+      <div class="section-label">Seus pets</div>
+      <button class="ghost-btn" id="btn-pets">Editar convênio, microchip e outros dados dos pets</button>
 
       <div class="section-label">Conta</div>
       <button class="ghost-btn" id="btn-sair" style="margin-bottom:8px">Sair da conta</button>
@@ -49,7 +43,6 @@
     </div>
   </div>
 
-  <!-- Caixa de cancelamento, escondida até o clique -->
   <div id="modal-cancelar" class="modal-overlay" style="display:none">
     <div class="modal-box">
       <div class="step-title">Por que quer cancelar?</div>
@@ -61,13 +54,13 @@
       </div>
       <textarea id="motivo-outro" class="field-input" placeholder="Especifique..." style="display:none;margin-top:8px;min-height:60px"></textarea>
 
-      <div class="banner-note">Sua conta será desativada — os dados não são apagados, mas você deixa de aparecer no sistema. Se mudar de ideia, é só entrar em contato com a clínica.</div>
+      <div class="banner-note">Sua conta será desativada — os dados não são apagados, mas você deixa de aparecer no sistema, e os agendamentos futuros ainda pendentes serão cancelados. Se mudar de ideia, é só entrar em contato com a clínica.</div>
 
       <button class="cta-btn" style="background:#E5346E" id="btn-confirmar-cancelamento">Confirmar cancelamento</button>
       <button class="ghost-btn" id="btn-fechar-modal">Voltar</button>
     </div>
   </div>
 
- <script type="module" src="js/configuracoes.js"></script>
+  <script type="module" src="js/configuracoes.js"></script>
 </body>
 </html>
