@@ -1,3 +1,4 @@
+import { supabase } from './supabase-client.js';
 document.getElementById('cfg-cpf').addEventListener('input', function(){
   let v = this.value.replace(/\D/g, '').slice(0, 11);
   v = v.replace(/(\d{3})(\d)/, '$1.$2');
@@ -47,5 +48,9 @@ document.getElementById('btn-confirmar-cancelamento').addEventListener('click', 
     return;
   }
   alert('Cadastro desativado. (ainda simulado — vira real quando ligarmos ao Supabase)');
+  window.location.href = 'index.html';
+});
+document.getElementById('btn-sair').addEventListener('click', async () => {
+  await supabase.auth.signOut();
   window.location.href = 'index.html';
 });
