@@ -212,3 +212,9 @@ body{
 .hist-info{flex:1;min-width:0}
 .btn-cancelar-ag{background:none;border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:11px;color:var(--pink-600);cursor:pointer;flex-shrink:0}
 .st-cancel{color:var(--ink-soft);font-weight:700}
+.painel{width:100%;max-width:760px;background:#fff;border-radius:20px;box-shadow:0 20px 50px rgba(18,59,82,.2);overflow:hidden;margin:20px}
+.painel-topo{background:var(--teal-900);color:#fff;padding:18px 22px;display:flex;justify-content:space-between;align-items:center}
+.painel-titulo{font-weight:800;font-size:16px}
+.painel-sub{font-size:12px;color:#B9D2DC;margin-top:3px}
+.painel-corpo{padding:20px 22px;font-size:13px;color:var(--ink-soft)}
+.btn-sair-painel{background:none;border:1px solid #B9D2DC;color:#fff;border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer}

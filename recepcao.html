@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Animal Valley — Painel da recepção</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Login da equipe -->
+  <div class="screen" id="tela-login">
+    <div class="topbar">
+      <div class="brand">Animal <span>Valley</span></div>
+      <div class="sub">Acesso da equipe</div>
+    </div>
+    <form id="form-login-equipe" class="body">
+      <label class="field">E-mail</label>
+      <input type="email" id="eq-email" class="field-input" required>
+      <label class="field">Senha</label>
+      <input type="password" id="eq-senha" class="field-input" required>
+      <button type="submit" class="cta-btn">Entrar</button>
+    </form>
+  </div>
+
+  <!-- Painel (só aparece depois do login de alguém da equipe) -->
+  <div class="painel" id="tela-painel" style="display:none">
+    <div class="painel-topo">
+      <div>
+        <div class="painel-titulo">Painel da recepção — Animal Valley</div>
+        <div class="painel-sub" id="painel-usuario"></div>
+      </div>
+      <button class="btn-sair-painel" id="btn-sair-painel">Sair</button>
+    </div>
+    <div class="painel-corpo" id="painel-conteudo">
+      O painel está sendo montado. Em breve: pré-agendamentos, horários e documentos.
+    </div>
+  </div>
+
+  <script type="module" src="js/recepcao.js"></script>
+</body>
+</html>
