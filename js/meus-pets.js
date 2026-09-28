@@ -52,6 +52,13 @@ if (!pets || pets.length === 0) {
     left.appendChild(icone);
     left.appendChild(info);
     item.appendChild(left);
+        const btnEditar = document.createElement('button');
+    btnEditar.textContent = '✏️ Editar';
+    btnEditar.className = 'btn-editar';
+    btnEditar.addEventListener('click', () => {
+      window.location.href = `editar-pet.html?id=${pet.id}`;
+    });
+    item.appendChild(btnEditar);
     container.appendChild(item);
   });
 }

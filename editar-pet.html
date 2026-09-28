@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Animal Valley — Editar pet</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="screen">
+    <div class="back-row">
+      <button class="back-btn" id="btn-voltar">←</button>
+      <div>
+        <div class="step-title">Editar pet</div>
+        <div class="step-hint">Corrija ou complete as informações</div>
+      </div>
+    </div>
+
+    <form id="pet-form" class="body">
+      <label class="field">Nome do pet</label>
+      <input type="text" id="pet-nome" class="field-input" required>
+
+      <div class="field-row">
+        <div>
+          <label class="field">Raça</label>
+          <input type="text" id="pet-raca" class="field-input">
+        </div>
+        <div>
+          <label class="field">Sexo</label>
+          <select id="pet-sexo" class="field-input" required>
+            <option value="">Selecione</option>
+            <option value="M">Macho</option>
+            <option value="F">Fêmea</option>
+          </select>
+        </div>
+      </div>
+
+      <label class="field">Nº do microchip <span class="opt">(se tiver)</span></label>
+      <input type="text" id="pet-microchip" class="field-input" placeholder="Ex: 900000000000000">
+
+      <div class="field-row">
+        <div>
+          <label class="field">Peso atual (kg)</label>
+          <input type="number" step="0.1" id="pet-peso" class="field-input" required>
+        </div>
+        <div>
+          <label class="field">Nascimento</label>
+          <input type="text" id="pet-nascimento" class="field-input" placeholder="dd/mm/aaaa" maxlength="10" required>
+        </div>
+      </div>
+
+      <div class="section-label">Castrado?</div>
+      <div class="toggle-row" id="toggle-castrado">
+        <div class="toggle-opt" data-value="nao">Não castrado</div>
+        <div class="toggle-opt" data-value="sim">Castrado</div>
+      </div>
+
+      <div class="section-label">Seu pet tem convênio? <span class="opt">(opcional)</span></div>
+      <div class="toggle-row" id="toggle-convenio">
+        <div class="toggle-opt" data-value="nao">Não tenho</div>
+        <div class="toggle-opt" data-value="sim">Sim, tenho</div>
+      </div>
+      <input type="text" id="pet-convenio-nome" class="field-input" placeholder="Qual convênio?" style="margin-top:8px;display:none">
+
+      <button type="submit" class="cta-btn">Salvar alterações</button>
+    </form>
+  </div>
+
+  <script type="module" src="js/editar-pet.js"></script>
+</body>
+</html>

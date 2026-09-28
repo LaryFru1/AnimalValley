@@ -204,3 +204,7 @@ body{
   margin-bottom:8px;font-size:13px;cursor:pointer;
 }
 .motivo-item input{margin-right:8px}
+.pet-item{justify-content:space-between;gap:12px}
+.pet-left{flex:1;min-width:0}
+.pet-check{margin-left:auto}
+.btn-editar{background:none;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:11px;color:var(--teal-900);cursor:pointer;flex-shrink:0}
