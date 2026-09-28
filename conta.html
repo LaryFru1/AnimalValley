@@ -8,26 +8,17 @@
 </head>
 <body>
   <div class="screen">
-  <div class="topbar" style="display:flex;justify-content:space-between;align-items:center">
-  <div>
-    <div class="brand">Minha conta</div>
-    <div class="sub">Ana Souza</div>
-  </div>
-  <button id="btn-config" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer">⚙️</button>
-</div>
+    <div class="topbar" style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div class="brand">Minha conta</div>
+        <div class="sub" id="nome-usuario"></div>
+      </div>
+      <button id="btn-config" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer">⚙️</button>
+    </div>
 
     <div class="body">
       <div class="section-label" style="margin-top:0">Meus pacotes</div>
-      <div class="pkg-card">
-        <div class="pkg-name">Banho e Tosa — porte P</div>
-        <div class="pkg-track">
-          <div class="pkg-dot used"></div>
-          <div class="pkg-dot used"></div>
-          <div class="pkg-dot"></div>
-          <div class="pkg-dot"></div>
-        </div>
-        <div class="pkg-meta">2 de 4 usados · válido até 15/11</div>
-      </div>
+      <div id="area-pacote"></div>
 
       <div class="section-label">Histórico de agendamentos</div>
       <div id="lista-historico"></div>
@@ -46,6 +37,6 @@
     </div>
   </div>
 
-  <script src="js/conta.js"></script>
+  <script type="module" src="js/conta.js"></script>
 </body>
 </html>
