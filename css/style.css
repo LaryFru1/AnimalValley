@@ -208,3 +208,7 @@ body{
 .pet-left{flex:1;min-width:0}
 .pet-check{margin-left:auto}
 .btn-editar{background:none;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:11px;color:var(--teal-900);cursor:pointer;flex-shrink:0}
+.hist-item{align-items:center;gap:8px}
+.hist-info{flex:1;min-width:0}
+.btn-cancelar-ag{background:none;border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:11px;color:var(--pink-600);cursor:pointer;flex-shrink:0}
+.st-cancel{color:var(--ink-soft);font-weight:700}

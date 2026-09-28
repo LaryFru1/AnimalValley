@@ -62,6 +62,30 @@ if (!pacotes || pacotes.length === 0) {
   areaPacote.appendChild(card);
 }
 
+// Cancelar um agendamento
+async function cancelarAgendamento(a){
+  const inicio = new Date(`${a.data}T${a.horario}`);
+  const horasRestantes = (inicio - new Date()) / (1000 * 60 * 60);
+
+  let aviso = 'Deseja cancelar este agendamento?';
+  if (horasRestantes < 24) {
+    aviso += '\n\nAtenção: cancelamentos com menos de 24 horas de antecedência podem ter taxa de cancelamento, conforme a política da clínica.';
+  }
+  if (!confirm(aviso)) return;
+
+  const { error } = await supabase
+    .from('agendamentos')
+    .update({ status: 'cancelado' })
+    .eq('id', a.id);
+
+  if (error) {
+    alert('Não foi possível cancelar: ' + error.message);
+    return;
+  }
+
+  window.location.reload();
+}
+
 // Histórico de agendamentos
 const container = document.getElementById('lista-historico');
 const { data: agendamentos } = await supabase
@@ -71,27 +95,41 @@ const { data: agendamentos } = await supabase
   .order('data', { ascending: false });
 
 if (!agendamentos || agendamentos.length === 0) {
-    const vazioHist = document.createElement('div');
+  const vazioHist = document.createElement('div');
   vazioHist.className = 'pkg-meta';
   vazioHist.textContent = 'Nenhum agendamento ainda.';
   container.appendChild(vazioHist);
 } else {
-  const rotulos = { aguardando: 'Aguardando', confirmado: 'Confirmado', recusado: 'Recusado', concluido: 'Concluído' };
+  const rotulos = { aguardando: 'Aguardando', confirmado: 'Confirmado', recusado: 'Recusado', concluido: 'Concluído', cancelado: 'Cancelado' };
 
   agendamentos.forEach(a => {
     const linha = document.createElement('div');
     linha.className = 'hist-item';
 
     const desc = document.createElement('span');
+    desc.className = 'hist-info';
     const [, mes, dia] = a.data.split('-');
     desc.textContent = `${a.pets ? a.pets.nome : ''} · ${a.servico} — ${dia}/${mes}`;
 
     const status = document.createElement('span');
-    status.className = (a.status === 'concluido' || a.status === 'confirmado') ? 'st-ok' : 'st-wait';
+    if (a.status === 'concluido' || a.status === 'confirmado') status.className = 'st-ok';
+    else if (a.status === 'cancelado' || a.status === 'recusado') status.className = 'st-cancel';
+    else status.className = 'st-wait';
     status.textContent = rotulos[a.status] || a.status;
 
     linha.appendChild(desc);
     linha.appendChild(status);
+
+    // Só mostra o botão se ainda dá para cancelar
+    const ehFuturo = new Date(`${a.data}T${a.horario}`) > new Date();
+    if ((a.status === 'aguardando' || a.status === 'confirmado') && ehFuturo) {
+      const btn = document.createElement('button');
+      btn.className = 'btn-cancelar-ag';
+      btn.textContent = 'Cancelar';
+      btn.addEventListener('click', () => cancelarAgendamento(a));
+      linha.appendChild(btn);
+    }
+
     container.appendChild(linha);
   });
 }
