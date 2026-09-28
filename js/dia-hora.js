@@ -1,21 +1,36 @@
-// Dados fictícios por enquanto — depois vêm do painel da recepção, via Supabase.
-const dias = [
-  { label: 'Ter', numero: 22 },
-  { label: 'Qua', numero: 23 },
-  { label: 'Qui', numero: 24 },
-  { label: 'Sex', numero: 25 },
-  { label: 'Sáb', numero: 26 }
-];
+// Horários de exemplo (ainda fictícios). Depois vêm do painel da recepção,
+// respeitando o horário da clínica: seg a sex 8h–17h, sábado 9h–13h.
+const NOMES_DIAS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const HORARIOS_SEMANA = ['08:00','09:00','10:00','11:00','13:00','14:00','15:00','16:00'];
+const HORARIOS_SABADO = ['09:00','10:00','11:00','12:00'];
 
-const horariosPorDia = {
-  22: ['09:00','10:00','11:00','14:00','15:00'],
-  23: ['09:00','09:30f','10:00','10:30','11:30','13:00f','14:00','15:30','16:00'],
-  24: ['09:00','10:00','13:00','14:00','16:00'],
-  25: ['09:30','10:30','11:00','14:00'],
-  26: ['09:00','09:30','10:00']
-};
+function doisDigitos(n){ return String(n).padStart(2, '0'); }
 
-let diaEscolhido = dias[1].numero; // Qua vem pré-selecionada, só de exemplo
+// Gera os próximos 6 dias em que a clínica abre (a partir de amanhã, sem domingos)
+const dias = [];
+const cursor = new Date();
+cursor.setHours(12, 0, 0, 0);
+
+while (dias.length < 6) {
+  cursor.setDate(cursor.getDate() + 1);
+  const diaSemana = cursor.getDay();
+  if (diaSemana === 0) continue;
+
+  const lista = diaSemana === 6 ? HORARIOS_SABADO : HORARIOS_SEMANA;
+  const horarios = lista.map((hora, i) => ({
+    hora: hora,
+    cheio: (cursor.getDate() + i) % 5 === 0  // só para simular alguns horários ocupados
+  }));
+
+  dias.push({
+    iso: `${cursor.getFullYear()}-${doisDigitos(cursor.getMonth() + 1)}-${doisDigitos(cursor.getDate())}`,
+    label: NOMES_DIAS[diaSemana],
+    numero: cursor.getDate(),
+    horarios: horarios
+  });
+}
+
+let diaEscolhido = dias[0];
 let horaEscolhida = null;
 
 const containerDias = document.getElementById('dias');
@@ -26,10 +41,10 @@ function renderDias(){
   containerDias.innerHTML = '';
   dias.forEach(d => {
     const el = document.createElement('div');
-    el.className = 'day-pill' + (d.numero === diaEscolhido ? ' picked' : '');
+    el.className = 'day-pill' + (d.iso === diaEscolhido.iso ? ' picked' : '');
     el.innerHTML = `<span class="n">${d.numero}</span>${d.label}`;
     el.addEventListener('click', () => {
-      diaEscolhido = d.numero;
+      diaEscolhido = d;
       horaEscolhida = null;
       renderDias();
       renderHorarios();
@@ -41,15 +56,13 @@ function renderDias(){
 
 function renderHorarios(){
   containerHorarios.innerHTML = '';
-  (horariosPorDia[diaEscolhido] || []).forEach(h => {
-    const cheio = h.endsWith('f');
-    const hora = cheio ? h.slice(0, -1) : h;
+  diaEscolhido.horarios.forEach(h => {
     const el = document.createElement('div');
-    el.className = 'time-slot' + (cheio ? ' full' : '') + (hora === horaEscolhida ? ' picked' : '');
-    el.textContent = hora;
-    if (!cheio) {
+    el.className = 'time-slot' + (h.cheio ? ' full' : '') + (h.hora === horaEscolhida ? ' picked' : '');
+    el.textContent = h.hora;
+    if (!h.cheio) {
       el.addEventListener('click', () => {
-        horaEscolhida = hora;
+        horaEscolhida = h.hora;
         renderHorarios();
         atualizarBotao();
       });
@@ -66,12 +79,12 @@ renderDias();
 renderHorarios();
 
 document.getElementById('btn-voltar').addEventListener('click', () => {
-  const veioDeBanho = sessionStorage.getItem('banhoTosaEscolhidos');
+  const veioDeBanho = sessionStorage.getItem('tipoServico') === 'banho';
   window.location.href = veioDeBanho ? 'banho-tosa.html' : 'servico.html';
 });
 
 btnContinuar.addEventListener('click', () => {
-  sessionStorage.setItem('diaEscolhido', diaEscolhido);
+  sessionStorage.setItem('dataEscolhida', diaEscolhido.iso);
   sessionStorage.setItem('horaEscolhida', horaEscolhida);
   window.location.href = 'confirmar.html';
 });
