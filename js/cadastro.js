@@ -1,5 +1,9 @@
 import { supabase } from './supabase-client.js';
 
+import { aplicarMascaraTelefone, telefoneValido } from './validacoes.js';
+
+aplicarMascaraTelefone(document.getElementById('su-telefone'));
+
 // Toggle: convênio
 document.getElementById('toggle-convenio').addEventListener('click', function(e){
   const opt = e.target.closest('.toggle-opt');
@@ -67,6 +71,10 @@ document.getElementById('signup-form').addEventListener('submit', async function
 
   if (!cpfValido(document.getElementById('su-cpf').value)) {
     alert('CPF inválido. Use o formato 000.000.000-00.');
+    return;
+  }
+    if (!telefoneValido(document.getElementById('su-telefone').value)) {
+    alert('Telefone inválido. Use DDD + número, por exemplo (11) 99999-9999.');
     return;
   }
   if (!dataValida(document.getElementById('su-nascimento').value)) {

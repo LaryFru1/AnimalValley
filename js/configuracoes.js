@@ -1,5 +1,9 @@
 import { supabase } from './supabase-client.js';
 
+import { aplicarMascaraTelefone, telefoneValido, formatarTelefone } from './validacoes.js';
+
+aplicarMascaraTelefone(document.getElementById('cfg-telefone'));
+
 const { data: { session } } = await supabase.auth.getSession();
 if (!session) {
   window.location.href = 'index.html';
@@ -64,7 +68,7 @@ const { data: responsavel } = await supabase
 
 if (responsavel) {
   document.getElementById('cfg-nome').value = responsavel.nome || '';
-  document.getElementById('cfg-telefone').value = responsavel.telefone || '';
+    document.getElementById('cfg-telefone').value = formatarTelefone(responsavel.telefone);
   document.getElementById('cfg-cpf').value = responsavel.cpf || '';
   document.getElementById('cfg-nascimento').value = formatarData(responsavel.data_nascimento);
 }
@@ -75,6 +79,10 @@ document.getElementById('form-dados').addEventListener('submit', async function(
 
   if (!cpfValido(document.getElementById('cfg-cpf').value)) {
     alert('CPF inválido. Use o formato 000.000.000-00.');
+    return;
+  }
+    if (!telefoneValido(document.getElementById('cfg-telefone').value)) {
+    alert('Telefone inválido. Use DDD + número, por exemplo (11) 99999-9999.');
     return;
   }
   if (!dataValida(document.getElementById('cfg-nascimento').value)) {
