@@ -33,15 +33,28 @@
     </div>
 
     <div class="painel-corpo">
-      <div class="painel-secao">
-        <div class="painel-secao-topo">
-          <h3>Pré-agendamentos aguardando confirmação</h3>
-          <button class="btn-atualizar" id="btn-atualizar">↻ Atualizar</button>
-        </div>
-        <div id="lista-pendentes"></div>
-      </div>
+  <div class="painel-secao">
+    <div class="painel-secao-topo">
+      <h3>Pré-agendamentos aguardando confirmação</h3>
+      <button class="btn-atualizar" id="btn-atualizar">↻ Atualizar</button>
     </div>
+    <div id="lista-pendentes"></div>
   </div>
+
+  <div class="painel-secao">
+    <div class="painel-secao-topo">
+      <h3>Cadastros desativados</h3>
+      <button class="btn-atualizar" id="btn-atualizar-desativados">↻ Atualizar</button>
+    </div>
+    <div id="lista-desativados"></div>
+  </div>
+  
+    <div class="painel-secao">
+      <h3>Documentos e exames dos pets</h3>
+      <input type="text" id="busca-doc" class="field-input" placeholder="🔍 Buscar por nome do pet ou do tutor..." style="margin-bottom:10px">
+      <div id="resultado-busca-doc"></div>
+    </div>
+</div>
 
   <script type="module" src="js/recepcao.js"></script>
 </body>

@@ -64,6 +64,25 @@ if (!pacotes || pacotes.length === 0) {
   areaPacote.appendChild(card);
 }
 
+// Carrega os pets no seletor, para escolher de quem é o documento
+const { data: petsDoUsuario } = await supabase
+  .from('pets')
+  .select('id, nome')
+  .eq('responsavel_id', userId)
+  .eq('status', 'ativo');
+
+const seletorPet = document.getElementById('doc-pet-select');
+if (petsDoUsuario && petsDoUsuario.length > 0) {
+  petsDoUsuario.forEach(p => {
+    const opcao = document.createElement('option');
+    opcao.value = p.id;
+    opcao.textContent = p.nome;
+    seletorPet.appendChild(opcao);
+  });
+} else {
+  seletorPet.style.display = 'none';
+}
+
 // Documentos e exames (os 3 mais recentes)
 const listaDocs = document.getElementById('lista-docs');
 const { data: docs } = await supabase
@@ -103,6 +122,18 @@ if (!docs || docs.length === 0) {
     texto.appendChild(meta);
     item.appendChild(ic);
     item.appendChild(texto);
+        item.style.cursor = 'pointer';
+    item.addEventListener('click', async () => {
+      const { data: linkTemporario, error } = await supabase.storage
+        .from('documentos')
+        .createSignedUrl(d.arquivo_url, 60);
+
+      if (error) {
+        alert('Não foi possível abrir o arquivo: ' + error.message);
+        return;
+      }
+      window.open(linkTemporario.signedUrl, '_blank');
+    });
     listaDocs.appendChild(item);
   });
 }
@@ -111,7 +142,46 @@ if (!docs || docs.length === 0) {
 document.getElementById('btn-agendar').addEventListener('click', () => window.location.href = 'escolher-pet.html');
 document.getElementById('btn-comunidade').addEventListener('click', () => window.location.href = 'https://chat.whatsapp.com/K6ysecIycGJ27xf0GINMhS');
 document.getElementById('btn-anexar').addEventListener('click', () => {
-  alert('O envio de arquivos vai funcionar quando configurarmos o Supabase Storage.');
+  if (!seletorPet.value && petsDoUsuario && petsDoUsuario.length > 0) {
+    alert('Escolha o pet antes de anexar.');
+    return;
+  }
+  document.getElementById('doc-arquivo').click();
+});
+
+document.getElementById('doc-arquivo').addEventListener('change', async function(){
+  const arquivo = this.files[0];
+  if (!arquivo) return;
+
+  const petId = seletorPet.value;
+  const caminho = `${userId}/${Date.now()}-${arquivo.name}`;
+
+  const { error: erroUpload } = await supabase.storage
+    .from('documentos')
+    .upload(caminho, arquivo);
+
+  if (erroUpload) {
+    alert('Erro ao enviar o arquivo: ' + erroUpload.message);
+    this.value = '';
+    return;
+  }
+
+  const { error: erroRegistro } = await supabase.from('documentos').insert({
+    pet_id: petId,
+    responsavel_id: userId,
+    nome_arquivo: arquivo.name,
+    arquivo_url: caminho,
+    enviado_por: 'cliente'
+  });
+
+  if (erroRegistro) {
+    alert('Arquivo enviado, mas houve um erro ao registrar: ' + erroRegistro.message);
+    this.value = '';
+    return;
+  }
+
+  alert('Documento enviado!');
+  window.location.reload();
 });
 document.getElementById('nav-pets').addEventListener('click', () => window.location.href = 'meus-pets.html');
 document.getElementById('nav-conta').addEventListener('click', () => window.location.href = 'conta.html');
