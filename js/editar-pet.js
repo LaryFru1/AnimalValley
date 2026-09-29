@@ -46,6 +46,7 @@ function dataValida(dataTexto){
 
 // Preenche o formulário com os dados atuais do pet
 document.getElementById('pet-nome').value = pet.nome || '';
+document.getElementById('pet-especie').value = pet.especie || '';
 document.getElementById('pet-raca').value = pet.raca || '';
 document.getElementById('pet-sexo').value = pet.sexo || '';
 document.getElementById('pet-microchip').value = pet.microchip || '';
@@ -104,6 +105,7 @@ document.getElementById('pet-form').addEventListener('submit', async function(e)
 
   const { error } = await supabase.from('pets').update({
     nome: document.getElementById('pet-nome').value,
+    especie: document.getElementById('pet-especie').value,
     raca: document.getElementById('pet-raca').value,
     sexo: document.getElementById('pet-sexo').value,
     microchip: document.getElementById('pet-microchip').value || null,

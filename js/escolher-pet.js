@@ -5,11 +5,13 @@ if (!session) {
   window.location.href = 'index.html';
 }
 const userId = session.user.id;
+const ICONES_ESPECIE = { cao: '🐕', gato: '🐈', outro: '🐾' };
 
 const { data: pets } = await supabase
   .from('pets')
   .select('*')
   .eq('responsavel_id', userId)
+      .eq('status', 'ativo')
   .order('criado_em', { ascending: true });
 
 const container = document.getElementById('lista-pets');
@@ -34,7 +36,7 @@ function render(){
 
     const icone = document.createElement('div');
     icone.className = 'pet-ic';
-    icone.textContent = '🐾';
+    icone.textContent = ICONES_ESPECIE[pet.especie] || '🐾';
 
     const info = document.createElement('div');
     const nome = document.createElement('div');

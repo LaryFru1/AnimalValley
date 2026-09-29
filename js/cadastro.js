@@ -123,6 +123,7 @@ document.getElementById('signup-form').addEventListener('submit', async function
   const { error: erroPet } = await supabase.from('pets').insert({
     responsavel_id: userId,
     nome: document.getElementById('pet-nome').value,
+    especie: document.getElementById('pet-especie').value,
     raca: document.getElementById('pet-raca').value,
     sexo: document.getElementById('pet-sexo').value,
     microchip: document.getElementById('pet-microchip').value || null,

@@ -1,13 +1,13 @@
 import { supabase } from './supabase-client.js';
 
-// Verifica login
 const { data: { session } } = await supabase.auth.getSession();
 if (!session) {
   window.location.href = 'index.html';
 }
 const userId = session.user.id;
 
-// Nome do responsável, no topo
+const ICONES_ESPECIE = { cao: '🐕', gato: '🐈', outro: '🐾' };
+
 const { data: responsavel } = await supabase
   .from('responsaveis')
   .select('nome')
@@ -15,19 +15,22 @@ const { data: responsavel } = await supabase
   .single();
 document.getElementById('nome-usuario').textContent = responsavel ? responsavel.nome : '';
 
-// Pets reais
-const { data: pets } = await supabase
-  .from('pets')
-  .select('*')
-  .eq('responsavel_id', userId)
-  .order('criado_em', { ascending: true });
+async function carregarPets(){
+  const { data: pets } = await supabase
+    .from('pets')
+    .select('*')
+    .eq('responsavel_id', userId)
+    .eq('status', 'ativo')
+    .order('criado_em', { ascending: true });
 
-const container = document.getElementById('lista-pets');
-container.innerHTML = '';
+  const container = document.getElementById('lista-pets');
+  container.innerHTML = '';
 
-if (!pets || pets.length === 0) {
-  container.textContent = 'Você ainda não cadastrou nenhum pet.';
-} else {
+  if (!pets || pets.length === 0) {
+    container.textContent = 'Você ainda não cadastrou nenhum pet.';
+    return;
+  }
+
   pets.forEach(pet => {
     const item = document.createElement('div');
     item.className = 'pet-item';
@@ -37,7 +40,7 @@ if (!pets || pets.length === 0) {
 
     const icone = document.createElement('div');
     icone.className = 'pet-ic';
-    icone.textContent = '🐾';
+    icone.textContent = ICONES_ESPECIE[pet.especie] || '🐾';
 
     const info = document.createElement('div');
     const nome = document.createElement('div');
@@ -52,18 +55,53 @@ if (!pets || pets.length === 0) {
     left.appendChild(icone);
     left.appendChild(info);
     item.appendChild(left);
-        const btnEditar = document.createElement('button');
+
+    const acoes = document.createElement('div');
+    acoes.style.display = 'flex';
+    acoes.style.gap = '6px';
+
+    const btnEditar = document.createElement('button');
     btnEditar.textContent = '✏️ Editar';
     btnEditar.className = 'btn-editar';
     btnEditar.addEventListener('click', () => {
       window.location.href = `editar-pet.html?id=${pet.id}`;
     });
-    item.appendChild(btnEditar);
+
+    const btnExcluir = document.createElement('button');
+    btnExcluir.textContent = '🗑️';
+    btnExcluir.className = 'btn-editar';
+    btnExcluir.style.color = '#E5346E';
+    btnExcluir.addEventListener('click', () => arquivarPet(pet));
+
+    acoes.appendChild(btnEditar);
+    acoes.appendChild(btnExcluir);
+    item.appendChild(acoes);
+
     container.appendChild(item);
   });
 }
 
-// Navegação
+async function arquivarPet(pet){
+  const confirmado = confirm(
+    `Remover ${pet.nome} da sua lista?\n\nEle não será apagado — o histórico continua guardado, e a clínica pode reativar o cadastro dele se você pedir.`
+  );
+  if (!confirmado) return;
+
+  const { error } = await supabase
+    .from('pets')
+    .update({ status: 'arquivado' })
+    .eq('id', pet.id);
+
+  if (error) {
+    alert('Não foi possível remover: ' + error.message);
+    return;
+  }
+
+  carregarPets();
+}
+
+carregarPets();
+
 document.getElementById('btn-add-pet').addEventListener('click', () => window.location.href = 'adicionar-pet.html');
 document.getElementById('nav-home').addEventListener('click', () => window.location.href = 'inicio.html');
 document.getElementById('nav-conta').addEventListener('click', () => window.location.href = 'conta.html');
