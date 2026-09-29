@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Animal Valley — Documentos</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="screen">
+    <div class="back-row">
+      <button class="back-btn" id="btn-voltar">←</button>
+      <div>
+        <div class="step-title" id="titulo">Documentos</div>
+        <div class="step-hint" id="subtitulo"></div>
+      </div>
+    </div>
+
+    <div class="body">
+      <div id="lista-docs"></div>
+
+      <div id="area-anexar" style="display:none;margin-top:14px">
+        <label class="ghost-btn" for="doc-arquivo" style="display:block;text-align:center;cursor:pointer">＋ Anexar documento</label>
+        <input type="file" id="doc-arquivo" accept=".pdf,image/*" style="display:none">
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/documentos-pet.js"></script>
+</body>
+</html>

@@ -50,7 +50,18 @@ document.getElementById('pet-form').addEventListener('submit', async function(e)
 
   const castrado = document.querySelector('#toggle-castrado .toggle-opt.picked').dataset.value === 'sim';
 
+    let fotoUrl = null;
+  const arquivoFoto = document.getElementById('pet-foto').files[0];
+  if (arquivoFoto) {
+    const caminhoFoto = `${userId}/${Date.now()}-${arquivoFoto.name}`;
+    const { error: erroFoto } = await supabase.storage.from('fotos-pets').upload(caminhoFoto, arquivoFoto);
+    if (!erroFoto) {
+      const { data: urlPublica } = supabase.storage.from('fotos-pets').getPublicUrl(caminhoFoto);
+      fotoUrl = urlPublica.publicUrl;
+    }
+  }
   const { error } = await supabase.from('pets').insert({
+    foto_url: fotoUrl,
     responsavel_id: userId,
     nome: document.getElementById('pet-nome').value,
     especie: document.getElementById('pet-especie').value,

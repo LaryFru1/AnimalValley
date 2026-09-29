@@ -46,6 +46,25 @@ function dataValida(dataTexto){
 
 // Preenche o formulário com os dados atuais do pet
 document.getElementById('pet-nome').value = pet.nome || '';
+if (pet.foto_url) {
+  document.getElementById('preview-foto').style.backgroundImage = `url(${pet.foto_url})`;
+  document.getElementById('preview-foto').textContent = '';
+}
+
+document.getElementById('pet-foto-edit').addEventListener('change', async function(){
+  const arquivo = this.files[0];
+  if (!arquivo) return;
+
+  const caminho = `${session.user.id}/${Date.now()}-${arquivo.name}`;
+  const { error: erroFoto } = await supabase.storage.from('fotos-pets').upload(caminho, arquivo);
+  if (erroFoto) { alert('Erro ao enviar a foto: ' + erroFoto.message); return; }
+
+  const { data: urlPublica } = supabase.storage.from('fotos-pets').getPublicUrl(caminho);
+  await supabase.from('pets').update({ foto_url: urlPublica.publicUrl }).eq('id', petId);
+
+  document.getElementById('preview-foto').style.backgroundImage = `url(${urlPublica.publicUrl})`;
+  document.getElementById('preview-foto').textContent = '';
+});
 document.getElementById('pet-especie').value = pet.especie || '';
 document.getElementById('pet-raca').value = pet.raca || '';
 document.getElementById('pet-sexo').value = pet.sexo || '';

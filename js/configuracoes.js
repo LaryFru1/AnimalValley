@@ -159,7 +159,7 @@ btnConfirmar.addEventListener('click', async () => {
   // 2. Desativa o cadastro (não apaga nada)
   const { error } = await supabase
     .from('responsaveis')
-    .update({ status: 'desativado', motivo_cancelamento: motivos[escolhido.value] })
+        .update({ status: 'desativado', motivo_cancelamento: motivos[escolhido.value], desativado_em: new Date().toISOString() })
     .eq('id', userId);
 
   if (error) {

@@ -34,9 +34,15 @@ function render(){
     const left = document.createElement('div');
     left.className = 'pet-left';
 
-    const icone = document.createElement('div');
+        const icone = document.createElement('div');
     icone.className = 'pet-ic';
-    icone.textContent = ICONES_ESPECIE[pet.especie] || '🐾';
+    if (pet.foto_url) {
+      icone.style.backgroundImage = `url(${pet.foto_url})`;
+      icone.style.backgroundSize = 'cover';
+      icone.style.backgroundPosition = 'center';
+    } else {
+      icone.textContent = ICONES_ESPECIE[pet.especie] || '🐾';
+    }
 
     const info = document.createElement('div');
     const nome = document.createElement('div');

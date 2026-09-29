@@ -17,6 +17,11 @@
     </div>
 
     <form id="pet-form" class="body">
+      <div class="photo-upload-row">
+  <label class="photo-circle" for="pet-foto-edit" id="preview-foto" style="background-size:cover;background-position:center"></label>
+  <input type="file" id="pet-foto-edit" accept="image/*" style="display:none">
+  <div class="photo-hint">Foto de perfil do pet<br><span>Toque para trocar</span></div>
+</div>
       <label class="field">Nome do pet</label>
       <input type="text" id="pet-nome" class="field-input" required>
 
