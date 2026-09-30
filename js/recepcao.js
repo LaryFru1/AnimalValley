@@ -2,7 +2,7 @@ import { supabase } from './supabase-client.js';
 
 const telaLogin = document.getElementById('tela-login');
 const telaPainel = document.getElementById('tela-painel');
-const ROTULOS_CARGO = { recepcao: 'Recepção', veterinaria: 'Veterinária' };
+const ROTULOS_CARGO = { recepcao: 'Recepção', veterinaria: 'Veterinária', dono: 'Dono(a)' };
 const NOMES_DIAS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 const NOMES_ESPECIE = { cao: 'Cão', gato: 'Gato', outro: 'Outro' };
 
@@ -101,7 +101,7 @@ async function carregarPendentes(){
 
     linha.appendChild(info);
 
-    if (cargoAtual === 'recepcao') {
+    if (cargoAtual === 'recepcao' || cargoAtual === 'dono') {
       const acoes = document.createElement('div');
       acoes.className = 'req-actions';
 
