@@ -302,6 +302,21 @@ document.getElementById('form-login-equipe').addEventListener('submit', async (e
   await verificarAcesso();
 });
 
+document.getElementById('eq-esqueci').addEventListener('click', async function(){
+  const email = prompt('Digite o e-mail cadastrado da equipe:');
+  if (!email) return;
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + '/redefinir-senha.html'
+  });
+
+  if (error) {
+    alert('Erro: ' + error.message);
+  } else {
+    alert('Se esse e-mail estiver cadastrado, um link de redefinição foi enviado!');
+  }
+});
+
 document.getElementById('btn-atualizar').addEventListener('click', carregarPendentes);
 document.getElementById('btn-atualizar-desativados').addEventListener('click', carregarDesativados);
 
