@@ -21,6 +21,13 @@ function mostrarPainel(membro){
     `${membro.nome} · ${ROTULOS_CARGO[membro.cargo] || membro.cargo}`;
   carregarPendentes();
   carregarDesativados();
+    carregarProfissionaisNoSelect();
+  carregarBloqueios();
+
+  if (cargoAtual === 'veterinaria') {
+    document.getElementById('secao-bloqueios').querySelectorAll('h3')[0].nextElementSibling;
+    // Veterinária não vê a seção de documentos nem desativados, só a de bloqueios
+  }
 }
 
 async function decidir(a, novoStatus){
@@ -325,4 +332,160 @@ document.getElementById('btn-sair-painel').addEventListener('click', async () =>
   mostrarLogin();
 });
 
+// --------- Bloqueios de agenda ---------
+
+document.getElementById('bloq-data').addEventListener('input', function(){
+  let v = this.value.replace(/\D/g, '').slice(0, 8);
+  if (v.length >= 5) v = v.replace(/(\d{2})(\d{2})(\d{1,4})/, '$1/$2/$3');
+  else if (v.length >= 3) v = v.replace(/(\d{2})(\d{1,2})/, '$1/$2');
+  this.value = v;
+});
+
+function converterDataBloqueio(dataTexto){
+  const [dia, mes, ano] = dataTexto.split('/');
+  return `${ano}-${mes}-${dia}`;
+}
+async function carregarProfissionaisNoSelect(){
+  const select = document.getElementById('bloq-profissional');
+  select.innerHTML = '';
+
+  let query = supabase.from('profissionais').select('id, nome, equipe_id').eq('ativo', true);
+
+  // Veterinária só vê (e só pode escolher) a própria agenda
+  if (cargoAtual === 'veterinaria') {
+    const { data: { session } } = await supabase.auth.getSession();
+    query = query.eq('equipe_id', session.user.id);
+  }
+
+  const { data: profissionais } = await query;
+
+  (profissionais || []).forEach(p => {
+    const opcao = document.createElement('option');
+    opcao.value = p.id;
+    opcao.textContent = p.nome;
+    select.appendChild(opcao);
+  });
+}
+
+document.getElementById('bloq-tipo').addEventListener('click', function(e){
+  const opt = e.target.closest('.toggle-opt');
+  if (!opt) return;
+  this.querySelectorAll('.toggle-opt').forEach(o => o.classList.remove('picked'));
+  opt.classList.add('picked');
+
+  const ehHorario = opt.dataset.value === 'horario';
+  document.getElementById('bloq-horarios').style.display = ehHorario ? 'block' : 'none';
+  document.getElementById('bloq-dados-cliente').style.display = ehHorario ? 'block' : 'none';
+});
+
+document.getElementById('btn-criar-bloqueio').addEventListener('click', async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+
+  const tipo = document.querySelector('#bloq-tipo .toggle-opt.picked').dataset.value;
+  const profissionalId = document.getElementById('bloq-profissional').value;
+    const dataDigitada = document.getElementById('bloq-data').value;
+  if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dataDigitada)) {
+    alert('Data inválida. Use o formato dd/mm/aaaa.');
+    return;
+  }
+  const data = converterDataBloqueio(dataDigitada);
+  const motivo = document.getElementById('bloq-motivo').value.trim();
+
+  if (!profissionalId || !data || !motivo) {
+    alert('Preencha profissional, data e motivo.');
+    return;
+  }
+
+  const registro = {
+    profissional_id: profissionalId,
+    data: data,
+    motivo: motivo,
+    criado_por: session.user.id
+  };
+
+  if (tipo === 'horario') {
+        const nomeResponsavel = document.getElementById('bloq-cliente').value.trim();
+    if (!nomeResponsavel) { alert('Informe o nome do responsável.'); return; }
+    const inicio = document.getElementById('bloq-inicio').value;
+    const fim = document.getElementById('bloq-fim').value;
+    if (!inicio || !fim) { alert('Preencha o horário de início e fim.'); return; }
+    registro.hora_inicio = inicio;
+    registro.hora_fim = fim;
+        registro.cliente_nome = nomeResponsavel;
+    registro.pet_nome = document.getElementById('bloq-pet').value || null;
+    registro.servico = document.getElementById('bloq-servico').value || null;
+  }
+
+  const { error } = await supabase.from('bloqueios').insert(registro);
+
+  if (error) { alert('Erro ao bloquear: ' + error.message); return; }
+
+  alert('Bloqueio criado!');
+  document.getElementById('bloq-motivo').value = '';
+  document.getElementById('bloq-cliente').value = '';
+  document.getElementById('bloq-pet').value = '';
+  document.getElementById('bloq-servico').value = '';
+  carregarBloqueios();
+});
+
+async function carregarBloqueios(){
+  const lista = document.getElementById('lista-bloqueios');
+  lista.textContent = 'Carregando...';
+
+  const hoje = new Date();
+  const hojeISO = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}-${String(hoje.getDate()).padStart(2,'0')}`;
+
+  const { data: bloqueios, error } = await supabase
+    .from('bloqueios')
+    .select('*, profissionais(nome)')
+    .gte('data', hojeISO)
+    .order('data', { ascending: true });
+
+  lista.innerHTML = '';
+
+  if (error) { lista.textContent = 'Erro ao carregar: ' + error.message; return; }
+  if (!bloqueios || bloqueios.length === 0) { lista.textContent = 'Nenhum bloqueio futuro.'; return; }
+
+  bloqueios.forEach(b => {
+    const item = document.createElement('div');
+    item.className = 'bloq-item';
+
+    const info = document.createElement('div');
+    info.className = 'info';
+
+    const [ano, mes, dia] = b.data.split('-');
+    const horarioTexto = b.hora_inicio ? `${b.hora_inicio.slice(0,5)}–${b.hora_fim.slice(0,5)}` : 'Dia inteiro';
+    const profNome = b.profissionais ? b.profissionais.nome : '';
+
+    const titulo = document.createElement('div');
+    titulo.textContent = `${dia}/${mes} · ${profNome} · ${horarioTexto}`;
+
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    let metaTexto = b.motivo;
+    if (b.cliente_nome) metaTexto += ` · ${b.cliente_nome}${b.pet_nome ? ' (' + b.pet_nome + ')' : ''}`;
+    if (b.servico) metaTexto += ` · ${b.servico}`;
+    meta.textContent = metaTexto;
+
+    info.appendChild(titulo);
+    info.appendChild(meta);
+    item.appendChild(info);
+
+    // Só quem criou (se for veterinária) ou recepção/dono pode remover
+    const podeRemover = cargoAtual === 'recepcao' || cargoAtual === 'dono';
+    if (podeRemover) {
+      const btnRemover = document.createElement('button');
+      btnRemover.className = 'btn-editar';
+      btnRemover.textContent = '🗑️';
+      btnRemover.addEventListener('click', async () => {
+        if (!confirm('Remover este bloqueio?')) return;
+        await supabase.from('bloqueios').delete().eq('id', b.id);
+        carregarBloqueios();
+      });
+      item.appendChild(btnRemover);
+    }
+
+    lista.appendChild(item);
+  });
+}
 verificarAcesso();

@@ -39,6 +39,7 @@ const { data: expediente } = await supabase
 const dias = [];
 const cursor = new Date();
 cursor.setHours(12, 0, 0, 0);
+cursor.setDate(cursor.getDate() - 1);
 
 let tentativas = 0;
 while (dias.length < 8 && tentativas < 60) {
@@ -151,7 +152,7 @@ async function renderHorarios(){
   containerHorarios.innerHTML = '';
 
   if (livres.length === 0) {
-    containerHorarios.textContent = 'Nenhum horário disponível neste dia.';
+        containerHorarios.innerHTML = '<div class="msg-vazio">Nenhum horário disponível neste dia.</div>';
     return;
   }
 

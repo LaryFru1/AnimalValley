@@ -57,6 +57,45 @@
       <input type="text" id="busca-doc" class="field-input" placeholder="🔍 Buscar por nome do pet ou do tutor..." style="margin-bottom:10px">
       <div id="resultado-busca-doc"></div>
     </div>
+    
+    <div class="painel-secao" id="secao-bloqueios">
+      <h3>Agenda — bloquear horário ou dia</h3>
+
+      <label class="field">Profissional</label>
+      <select id="bloq-profissional" class="field-input"></select>
+
+      <label class="field">Data</label>
+      <input type="text" id="bloq-data" class="field-input" placeholder="dd/mm/aaaa" maxlength="10">
+
+      <div class="toggle-row" id="bloq-tipo">
+        <div class="toggle-opt picked" data-value="dia">Dia inteiro</div>
+        <div class="toggle-opt" data-value="horario">Só um horário</div>
+      </div>
+
+      <div id="bloq-horarios" style="display:none;margin-top:10px">
+        <div class="field-row">
+          <div><label class="field">Das</label><input type="time" id="bloq-inicio" class="field-input"></div>
+          <div><label class="field">Até</label><input type="time" id="bloq-fim" class="field-input"></div>
+        </div>
+      </div>
+
+      <label class="field">Motivo</label>
+      <input type="text" id="bloq-motivo" class="field-input" placeholder="Ex: Folga, feriado, agendado por telefone">
+
+      <div id="bloq-dados-cliente" style="display:none">
+        <label class="field">Nome do responsável</label>
+<input type="text" id="bloq-cliente" class="field-input" required>
+        <label class="field">Nome do pet</label>
+        <input type="text" id="bloq-pet" class="field-input">
+        <label class="field">Serviço combinado</label>
+        <input type="text" id="bloq-servico" class="field-input" placeholder="Ex: Banho P, Consulta...">
+      </div>
+
+      <button class="cta-btn" id="btn-criar-bloqueio" style="margin-top:12px">Bloquear</button>
+
+      <div class="section-label">Bloqueios futuros</div>
+      <div id="lista-bloqueios"></div>
+    </div>
 </div>
 
   <script type="module" src="js/recepcao.js"></script>
