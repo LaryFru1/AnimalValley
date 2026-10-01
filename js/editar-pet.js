@@ -7,6 +7,9 @@ if (!session) {
 
 // Descobre qual pet está sendo editado, pelo id na URL (ex: editar-pet.html?id=abc123)
 const petId = new URLSearchParams(window.location.search).get('id');
+document.getElementById('pet-raca').addEventListener('change', function(){
+  document.getElementById('pet-raca-outro').style.display = this.value === 'outro' ? 'block' : 'none';
+});
 if (!petId) {
   window.location.href = 'meus-pets.html';
 }
@@ -66,7 +69,14 @@ document.getElementById('pet-foto-edit').addEventListener('change', async functi
   document.getElementById('preview-foto').textContent = '';
 });
 document.getElementById('pet-especie').value = pet.especie || '';
-document.getElementById('pet-raca').value = pet.raca || '';
+const racaExiste = [...document.getElementById('pet-raca').options].some(o => o.value === pet.raca);
+if (racaExiste) {
+  document.getElementById('pet-raca').value = pet.raca || '';
+} else if (pet.raca) {
+  document.getElementById('pet-raca').value = 'outro';
+  document.getElementById('pet-raca-outro').value = pet.raca;
+  document.getElementById('pet-raca-outro').style.display = 'block';
+}
 document.getElementById('pet-sexo').value = pet.sexo || '';
 document.getElementById('pet-microchip').value = pet.microchip || '';
 document.getElementById('pet-peso').value = pet.peso || '';
@@ -125,7 +135,7 @@ document.getElementById('pet-form').addEventListener('submit', async function(e)
   const { error } = await supabase.from('pets').update({
     nome: document.getElementById('pet-nome').value,
     especie: document.getElementById('pet-especie').value,
-    raca: document.getElementById('pet-raca').value,
+    raca: document.getElementById('pet-raca').value === 'outro' ? document.getElementById('pet-raca-outro').value : document.getElementById('pet-raca').value,
     sexo: document.getElementById('pet-sexo').value,
     microchip: document.getElementById('pet-microchip').value || null,
     peso: parseFloat(document.getElementById('pet-peso').value),

@@ -5,6 +5,9 @@ if (!session) {
   window.location.href = 'index.html';
 }
 const userId = session.user.id;
+document.getElementById('pet-raca').addEventListener('change', function(){
+  document.getElementById('pet-raca-outro').style.display = this.value === 'outro' ? 'block' : 'none';
+});
 
 // Máscara e validação da data
 document.getElementById('pet-nascimento').addEventListener('input', function(){
@@ -65,7 +68,7 @@ document.getElementById('pet-form').addEventListener('submit', async function(e)
     responsavel_id: userId,
     nome: document.getElementById('pet-nome').value,
     especie: document.getElementById('pet-especie').value,
-    raca: document.getElementById('pet-raca').value,
+    raca: document.getElementById('pet-raca').value === 'outro' ? document.getElementById('pet-raca-outro').value : document.getElementById('pet-raca').value,
     sexo: document.getElementById('pet-sexo').value,
     microchip: document.getElementById('pet-microchip').value || null,
     peso: parseFloat(document.getElementById('pet-peso').value),

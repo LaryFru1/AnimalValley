@@ -3,6 +3,9 @@ import { supabase } from './supabase-client.js';
 import { aplicarMascaraTelefone, telefoneValido } from './validacoes.js';
 
 aplicarMascaraTelefone(document.getElementById('su-telefone'));
+document.getElementById('pet-raca').addEventListener('change', function(){
+  document.getElementById('pet-raca-outro').style.display = this.value === 'outro' ? 'block' : 'none';
+});
 
 // Toggle: convênio
 document.getElementById('toggle-convenio').addEventListener('click', function(e){
@@ -135,7 +138,7 @@ document.getElementById('signup-form').addEventListener('submit', async function
     responsavel_id: userId,
     nome: document.getElementById('pet-nome').value,
     especie: document.getElementById('pet-especie').value,
-    raca: document.getElementById('pet-raca').value,
+    raca: document.getElementById('pet-raca').value === 'outro' ? document.getElementById('pet-raca-outro').value : document.getElementById('pet-raca').value,
     sexo: document.getElementById('pet-sexo').value,
     microchip: document.getElementById('pet-microchip').value || null,
     peso: parseFloat(document.getElementById('pet-peso').value),
