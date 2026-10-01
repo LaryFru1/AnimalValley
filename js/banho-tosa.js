@@ -1,4 +1,10 @@
 // Tabela de preços por porte (do catálogo da clínica)
+const DURACOES = {
+  P:  { banho:45,  banhoTosaMaquina:105, banhoTosaTesoura:135, tosaHigienica:10, tosaTesoura:90,  tosaMaquina:60,  hidratSimples:10, hidratPremium:10 },
+  M:  { banho:60,  banhoTosaMaquina:150, banhoTosaTesoura:180, tosaHigienica:10, tosaTesoura:120, tosaMaquina:90,  hidratSimples:10, hidratPremium:10 },
+  G:  { banho:90,  banhoTosaMaquina:210, banhoTosaTesoura:240, tosaHigienica:10, tosaTesoura:150, tosaMaquina:120, hidratSimples:10, hidratPremium:10 },
+  GG: { banho:120, banhoTosaMaquina:270, banhoTosaTesoura:300, tosaHigienica:10, tosaTesoura:180, tosaMaquina:150, hidratSimples:10, hidratPremium:10 }
+};
 const PRECOS = {
   P:  { banho:65,  banhoTosaMaquina:100, banhoTosaTesoura:125, tosaHigienica:20, tosaTesoura:70,  tosaMaquina:45,  hidratSimples:15, hidratPremium:25, pacote:200 },
   M:  { banho:75,  banhoTosaMaquina:125, banhoTosaTesoura:155, tosaHigienica:30, tosaTesoura:90,  tosaMaquina:55,  hidratSimples:20, hidratPremium:30, pacote:230 },
@@ -17,6 +23,7 @@ const nomePet = sessionStorage.getItem('petEscolhido') || 'seu pet';
 const peso = parseFloat(sessionStorage.getItem('petPeso')) || 5;
 const porte = calcularPorte(peso);
 const precos = PRECOS[porte];
+const duracoes = DURACOES[porte];
 
 document.getElementById('titulo').textContent = `Banho e tosa — ${nomePet} (porte ${porte})`;
 document.getElementById('pkg-nome').textContent = `Pacote — porte ${porte} (R$ ${precos.pacote})`;
@@ -106,6 +113,14 @@ document.getElementById('btn-continuar').addEventListener('click', () => {
 
   sessionStorage.setItem('servicoResumo', resumo);
   sessionStorage.setItem('servicoPreco', preco);
+    let duracaoTotal = 0;
+  if (forma === 'pacote') {
+    duracaoTotal = duracoes.banho; // pacote usa banho simples como base de tempo
+  } else {
+    selecionados.forEach(chave => duracaoTotal += duracoes[chave]);
+  }
+  sessionStorage.setItem('duracaoMinutos', duracaoTotal);
+  sessionStorage.setItem('profissionalTipo', 'banho_tosa');
   sessionStorage.removeItem('servicoResumo_direto');
   window.location.href = 'dia-hora.html';
 });

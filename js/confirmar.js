@@ -76,6 +76,8 @@ btnEnviar.addEventListener('click', async () => {
     detalhes: usaPacote ? 'Usar pacote' : null,
     data: dataISO,
     horario: hora,
+        profissional_id: sessionStorage.getItem('profissionalId'),
+    duracao_minutos: parseInt(sessionStorage.getItem('duracaoMinutos')) || 15,
     forma_pagamento: formaPagamento,
     valor_estimado: usaConvenio ? null : extrairValor(precoTexto)
   });
@@ -88,7 +90,7 @@ btnEnviar.addEventListener('click', async () => {
   }
 
   // Limpa os dados temporários do caminho de agendamento
-  ['petId','petEscolhido','petPeso','servicoResumo','servicoPreco','dataEscolhida','horaEscolhida','tipoServico']
+    ['petId','petEscolhido','petPeso','servicoResumo','servicoPreco','dataEscolhida','horaEscolhida','tipoServico','duracaoMinutos','profissionalTipo','profissionalId','profissionalNome']
     .forEach(chave => sessionStorage.removeItem(chave));
 
   alert('Pré-agendamento enviado! A clínica vai confirmar em breve.');
