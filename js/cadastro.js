@@ -76,6 +76,10 @@ document.getElementById('signup-form').addEventListener('submit', async function
     alert('CPF inválido. Use o formato 000.000.000-00.');
     return;
   }
+    if (!document.getElementById('aceite-termos').checked) {
+    alert('Você precisa aceitar os Termos de Uso para criar sua conta.');
+    return;
+  }
     if (!telefoneValido(document.getElementById('su-telefone').value)) {
     alert('Telefone inválido. Use DDD + número, por exemplo (11) 99999-9999.');
     return;
