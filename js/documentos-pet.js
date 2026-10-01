@@ -90,7 +90,7 @@ async function carregarDocs(){
     });
     acoes.appendChild(link);
 
-    const podeExcluir = (cargo === 'cliente' && d.enviado_por === 'cliente') || cargo === 'recepcao';
+    const podeExcluir = (cargo === 'cliente' && d.enviado_por === 'cliente') || (cargo !== 'cliente' && d.enviado_por === 'clinica');
     if (podeExcluir) {
       const btnExcluir = document.createElement('button');
       btnExcluir.textContent = '🗑️';

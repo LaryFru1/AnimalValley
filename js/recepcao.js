@@ -21,6 +21,7 @@ function mostrarPainel(membro){
     `${membro.nome} · ${ROTULOS_CARGO[membro.cargo] || membro.cargo}`;
   carregarPendentes();
   carregarDesativados();
+    carregarAgendaHoje();
     carregarProfissionaisNoSelect();
   carregarBloqueios();
 
@@ -131,6 +132,70 @@ async function carregarPendentes(){
   });
 }
 
+function hojeISOData(){
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+async function carregarAgendaHoje(){
+  const lista = document.getElementById('lista-agenda-hoje');
+  lista.textContent = 'Carregando...';
+
+  const hoje = hojeISOData();
+
+  const { data: confirmados } = await supabase
+    .from('agendamentos')
+    .select('*, pets(nome), responsaveis(nome, telefone), profissionais(nome)')
+    .eq('data', hoje)
+    .eq('status', 'confirmado')
+    .order('horario', { ascending: true });
+
+  const { data: bloqueios } = await supabase
+    .from('bloqueios')
+    .select('*, profissionais(nome)')
+    .eq('data', hoje)
+    .not('hora_inicio', 'is', null)
+    .order('hora_inicio', { ascending: true });
+
+  const itens = [
+    ...(confirmados || []).map(a => ({
+      tipo: 'agendamento',
+      horario: a.horario.slice(0,5),
+      texto: `${a.responsaveis ? a.responsaveis.nome : ''} · ${a.pets ? a.pets.nome : ''}`,
+      meta: `${a.servico} · ${a.profissionais ? a.profissionais.nome : ''}${a.responsaveis && a.responsaveis.telefone ? ' · Tel: ' + a.responsaveis.telefone : ''}`
+    })),
+    ...(bloqueios || []).map(b => ({
+      tipo: 'bloqueio',
+      horario: b.hora_inicio.slice(0,5),
+      texto: `${b.cliente_nome || 'Bloqueio'} · ${b.pet_nome || ''}`,
+      meta: `${b.servico || b.motivo} · ${b.profissionais ? b.profissionais.nome : ''} (agendado por telefone/manual)`
+    }))
+  ].sort((x, y) => x.horario.localeCompare(y.horario));
+
+  lista.innerHTML = '';
+
+  if (itens.length === 0) {
+    lista.textContent = 'Nada agendado para hoje ainda.';
+    return;
+  }
+
+  itens.forEach(item => {
+    const linha = document.createElement('div');
+    linha.className = 'req-row';
+    const info = document.createElement('div');
+    info.className = 'req-info';
+    const titulo = document.createElement('div');
+    titulo.className = 'req-quem';
+    titulo.textContent = `${item.horario} · ${item.texto}`;
+    const meta = document.createElement('div');
+    meta.className = 'req-quando';
+    meta.textContent = item.meta;
+    info.appendChild(titulo);
+    info.appendChild(meta);
+    linha.appendChild(info);
+    lista.appendChild(linha);
+  });
+}
 async function carregarDesativados(){
   const lista = document.getElementById('lista-desativados');
   if (cargoAtual !== 'recepcao') {
@@ -267,7 +332,7 @@ async function renderPetComDocumentos(pet, container){
   btnVer.style.marginTop = '8px';
   btnVer.textContent = '📁 Ver/gerenciar documentos';
   btnVer.addEventListener('click', () => {
-    window.open(`documentos-pet.html?id=${pet.id}`, '_blank');
+    window.open(`documentos-pet.html?id=${pet.id}`, 'painel-documentos-pet');
   });
 
   card.appendChild(nome);
@@ -326,6 +391,7 @@ document.getElementById('eq-esqueci').addEventListener('click', async function()
 
 document.getElementById('btn-atualizar').addEventListener('click', carregarPendentes);
 document.getElementById('btn-atualizar-desativados').addEventListener('click', carregarDesativados);
+document.getElementById('btn-atualizar-agenda-hoje').addEventListener('click', carregarAgendaHoje);
 
 document.getElementById('btn-sair-painel').addEventListener('click', async () => {
   await supabase.auth.signOut();
@@ -406,14 +472,18 @@ document.getElementById('btn-criar-bloqueio').addEventListener('click', async ()
   if (tipo === 'horario') {
         const nomeResponsavel = document.getElementById('bloq-cliente').value.trim();
     if (!nomeResponsavel) { alert('Informe o nome do responsável.'); return; }
+        const nomePet = document.getElementById('bloq-pet').value.trim();
+    const servicoCombinado = document.getElementById('bloq-servico').value.trim();
+    if (!nomePet) { alert('Informe o nome do pet.'); return; }
+    if (!servicoCombinado) { alert('Informe o serviço combinado.'); return; }
     const inicio = document.getElementById('bloq-inicio').value;
     const fim = document.getElementById('bloq-fim').value;
     if (!inicio || !fim) { alert('Preencha o horário de início e fim.'); return; }
     registro.hora_inicio = inicio;
     registro.hora_fim = fim;
         registro.cliente_nome = nomeResponsavel;
-    registro.pet_nome = document.getElementById('bloq-pet').value || null;
-    registro.servico = document.getElementById('bloq-servico').value || null;
+        registro.pet_nome = nomePet;
+    registro.servico = servicoCombinado;
   }
 
   const { error } = await supabase.from('bloqueios').insert(registro);

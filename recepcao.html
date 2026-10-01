@@ -42,6 +42,14 @@
       <button class="btn-atualizar" id="btn-atualizar">↻ Atualizar</button>
     </div>
     <div id="lista-pendentes"></div>
+    
+    <div class="painel-secao">
+      <div class="painel-secao-topo">
+        <h3>Agenda de hoje</h3>
+        <button class="btn-atualizar" id="btn-atualizar-agenda-hoje">↻ Atualizar</button>
+      </div>
+      <div id="lista-agenda-hoje"></div>
+    </div>
   </div>
 
   <div class="painel-secao">
@@ -86,9 +94,9 @@
         <label class="field">Nome do responsável</label>
 <input type="text" id="bloq-cliente" class="field-input" required>
         <label class="field">Nome do pet</label>
-        <input type="text" id="bloq-pet" class="field-input">
+        <input type="text" id="bloq-pet" class="field-input" required>
         <label class="field">Serviço combinado</label>
-        <input type="text" id="bloq-servico" class="field-input" placeholder="Ex: Banho P, Consulta...">
+        <input type="text" id="bloq-servico" class="field-input" placeholder="Ex: Banho P, Consulta..." required>
       </div>
 
       <button class="cta-btn" id="btn-criar-bloqueio" style="margin-top:12px">Bloquear</button>
