@@ -22,6 +22,7 @@ function mostrarPainel(membro){
   carregarPendentes();
   carregarDesativados();
     carregarAgendaHoje();
+      document.getElementById('agenda-data').addEventListener('change', carregarAgendaHoje);
     carregarProfissionaisNoSelect();
   carregarBloqueios();
 
@@ -180,7 +181,9 @@ async function carregarAgendaHoje(){
   const lista = document.getElementById('lista-agenda-hoje');
   lista.textContent = 'Carregando...';
 
-  const hoje = hojeISOData();
+  const campoData = document.getElementById('agenda-data');
+  if (!campoData.value) campoData.value = hojeISOData();
+  const hoje = campoData.value;
 
   const { data: confirmados } = await supabase
     .from('agendamentos')
@@ -216,7 +219,7 @@ async function carregarAgendaHoje(){
   lista.innerHTML = '';
 
   if (itens.length === 0) {
-    lista.textContent = 'Nada agendado para hoje ainda.';
+    lista.textContent = 'Nada agendado para este dia ainda.';
     return;
   }
 
@@ -271,8 +274,8 @@ async function carregarAgendaHoje(){
         carregarAgendaHoje();
       });
 
-      acoes.appendChild(btnCancelarAg);
       acoes.appendChild(btnReagendar);
+      
       const btnCancelarAg = document.createElement('button');
       btnCancelarAg.className = 'btn-no';
       btnCancelarAg.textContent = 'Cancelar';
