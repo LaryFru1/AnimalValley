@@ -67,11 +67,7 @@ async function cancelarAgendamento(a){
   const inicio = new Date(`${a.data}T${a.horario}`);
   const horasRestantes = (inicio - new Date()) / (1000 * 60 * 60);
 
-  let aviso = 'Deseja cancelar este agendamento?';
-  if (horasRestantes < 24) {
-    aviso += '\n\nAtenção: cancelamentos com menos de 24 horas de antecedência podem ter taxa de cancelamento, conforme a política da clínica.';
-  }
-  if (!confirm(aviso)) return;
+   if (!confirm('Deseja cancelar este agendamento?')) return;
 
   const { error } = await supabase
     .from('agendamentos')

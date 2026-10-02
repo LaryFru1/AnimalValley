@@ -32,6 +32,27 @@ function mostrarPainel(membro){
 }
 
 async function decidir(a, novoStatus){
+  if (novoStatus === 'recusado') {
+    const quer = confirm('Esta pessoa precisa ser reagendada para outro horário (evita duplicidade)?\n\nOK = Reagendar agora\nCancelar = Apenas recusar, sem reagendar');
+    if (quer) {
+      const dataISO = pedirDataValida('Nova data para este agendamento');
+      if (!dataISO) return;
+      const novaHora = pedirHoraValida('Novo horário');
+      if (!novaHora) return;
+
+      const { error } = await supabase
+        .from('agendamentos')
+        .update({ data: dataISO, horario: novaHora })
+        .eq('id', a.id)
+        .eq('status', 'aguardando');
+
+      if (error) { alert('Erro ao reagendar: ' + error.message); return; }
+      alert('Agendamento reagendado! Ele continua como pendente, para você confirmar depois.');
+      carregarPendentes();
+      return;
+    }
+  }
+
   const verbo = novoStatus === 'confirmado' ? 'confirmar' : 'recusar';
   if (!confirm(`Deseja ${verbo} este agendamento?`)) return;
 
@@ -132,6 +153,24 @@ async function carregarPendentes(){
   });
 }
 
+function pedirDataValida(mensagemInicial){
+  let texto = prompt(mensagemInicial + ' (dd/mm/aaaa):');
+  while (texto !== null && !/^\d{2}\/\d{2}\/\d{4}$/.test(texto)) {
+    texto = prompt('Data inválida. Use o formato dd/mm/aaaa:', texto);
+  }
+  if (texto === null) return null;
+  const [dia, mes, ano] = texto.split('/');
+  return `${ano}-${mes}-${dia}`;
+}
+
+function pedirHoraValida(mensagemInicial){
+  let texto = prompt(mensagemInicial + ' (hh:mm):');
+  while (texto !== null && !/^([01]\d|2[0-3]):[0-5]\d$/.test(texto)) {
+    texto = prompt('Horário inválido. Use o formato hh:mm, de 00:00 a 23:59:', texto);
+  }
+  return texto;
+}
+
 function hojeISOData(){
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -157,9 +196,11 @@ async function carregarAgendaHoje(){
     .not('hora_inicio', 'is', null)
     .order('hora_inicio', { ascending: true });
 
-  const itens = [
+   const itens = [
     ...(confirmados || []).map(a => ({
       tipo: 'agendamento',
+      id: a.id,
+      telefone: a.responsaveis ? a.responsaveis.telefone : null,
       horario: a.horario.slice(0,5),
       texto: `${a.responsaveis ? a.responsaveis.nome : ''} · ${a.pets ? a.pets.nome : ''}`,
       meta: `${a.servico} · ${a.profissionais ? a.profissionais.nome : ''}${a.responsaveis && a.responsaveis.telefone ? ' · Tel: ' + a.responsaveis.telefone : ''}`
@@ -193,6 +234,59 @@ async function carregarAgendaHoje(){
     info.appendChild(titulo);
     info.appendChild(meta);
     linha.appendChild(info);
+
+    if (item.tipo === 'agendamento' && (cargoAtual === 'recepcao' || cargoAtual === 'dono')) {
+      const acoes = document.createElement('div');
+      acoes.className = 'req-actions';
+
+      if (item.telefone) {
+        const btnWhats = document.createElement('button');
+        btnWhats.className = 'btn-no';
+        btnWhats.textContent = '💬 WhatsApp';
+        btnWhats.addEventListener('click', () => {
+          const numero = '55' + item.telefone.replace(/\D/g, '');
+          const texto = encodeURIComponent(`Olá! Aqui é da Animal Valley. Precisamos conversar sobre o seu agendamento de hoje às ${item.horario}.`);
+          window.open(`https://wa.me/${numero}?text=${texto}`, '_blank');
+        });
+        acoes.appendChild(btnWhats);
+      }
+
+      const btnReagendar = document.createElement('button');
+      btnReagendar.className = 'btn-ok';
+      btnReagendar.textContent = 'Reagendar';
+          btnReagendar.addEventListener('click', async () => {
+        const dataISO = pedirDataValida('Nova data');
+        if (!dataISO) return;
+        const novaHora = pedirHoraValida('Novo horário');
+        if (!novaHora) return;
+
+        const { error } = await supabase
+          .from('agendamentos')
+          .update({ data: dataISO, horario: novaHora })
+          .eq('id', item.id);
+
+        if (error) { alert('Erro ao reagendar: ' + error.message); return; }
+
+        alert('Agendamento atualizado!');
+        carregarAgendaHoje();
+      });
+
+      acoes.appendChild(btnCancelarAg);
+      acoes.appendChild(btnReagendar);
+      const btnCancelarAg = document.createElement('button');
+      btnCancelarAg.className = 'btn-no';
+      btnCancelarAg.textContent = 'Cancelar';
+      btnCancelarAg.addEventListener('click', async () => {
+        if (!confirm('Cancelar este agendamento?')) return;
+        const { error } = await supabase.from('agendamentos').update({ status: 'cancelado' }).eq('id', item.id);
+        if (error) { alert('Erro ao cancelar: ' + error.message); return; }
+        carregarAgendaHoje();
+      });
+      acoes.appendChild(btnCancelarAg);
+
+      linha.appendChild(acoes);
+    }
+
     lista.appendChild(linha);
   });
 }
