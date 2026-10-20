@@ -70,6 +70,10 @@ btnEnviar.addEventListener('click', async () => {
   const usaPacote = servico.startsWith('Pacote');
 
   const { error } = await supabase.from('agendamentos').insert({
+        usa_pacote: sessionStorage.getItem('usaPacote') === 'sim',
+    tosa_higienica_incluida: sessionStorage.getItem('tosaHigienicaIncluida') === 'sim',
+    porte_pacote: sessionStorage.getItem('porteSelecionado') || null,
+    pacote_id: sessionStorage.getItem('pacoteIdExistente') || null,
     pet_id: petId,
     responsavel_id: userId,
     servico: servico,
@@ -90,7 +94,7 @@ btnEnviar.addEventListener('click', async () => {
   }
 
   // Limpa os dados temporários do caminho de agendamento
-    ['petId','petEscolhido','petPeso','servicoResumo','servicoPreco','dataEscolhida','horaEscolhida','tipoServico','duracaoMinutos','profissionalTipo','profissionalId','profissionalNome']
+     ['petId','petEscolhido','petPeso','servicoResumo','servicoPreco','dataEscolhida','horaEscolhida','tipoServico','duracaoMinutos','profissionalTipo','profissionalId','profissionalNome','usaPacote','tosaHigienicaIncluida','porteSelecionado','pacoteIdExistente']
     .forEach(chave => sessionStorage.removeItem(chave));
 
   alert('Pré-agendamento enviado! A clínica vai confirmar em breve.');

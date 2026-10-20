@@ -32,6 +32,52 @@ function mostrarPainel(membro){
   }
 }
 
+async function reverterPacoteSeNecessario(agendamento){
+  if (!agendamento.usa_pacote || !agendamento.pacote_id) return;
+
+  const { data: pacote } = await supabase
+    .from('pacotes')
+    .select('sessoes_usadas')
+    .eq('id', agendamento.pacote_id)
+    .single();
+
+  if (pacote && pacote.sessoes_usadas === 0) {
+    await supabase.from('pacotes').update({ status: 'cancelado' }).eq('id', agendamento.pacote_id);
+  }
+}
+async function processarPacote(agendamento){
+  if (!agendamento.usa_pacote) return;
+
+  if (agendamento.pacote_id) return; // já está ligado a um pacote existente, nada a criar
+
+  const SESSOES_POR_PACOTE = { P: 4, M: 4, G: 4, GG: 4 };
+  const hoje = new Date();
+  const validade = new Date(hoje);
+  validade.setMonth(validade.getMonth() + 1);
+  const validadeISO = `${validade.getFullYear()}-${String(validade.getMonth()+1).padStart(2,'0')}-${String(validade.getDate()).padStart(2,'0')}`;
+
+  const { data: novoPacote, error } = await supabase
+    .from('pacotes')
+    .insert({
+      pet_id: agendamento.pet_id,
+      responsavel_id: agendamento.responsavel_id,
+      porte: agendamento.porte_pacote,
+      sessoes_total: SESSOES_POR_PACOTE[agendamento.porte_pacote] || 4,
+      sessoes_usadas: 0,
+      tosa_higienica_usada: false,
+      validade: validadeISO,
+      status: 'ativo'
+    })
+    .select()
+    .single();
+
+  if (error) {
+    alert('Agendamento confirmado, mas houve um erro ao criar o pacote: ' + error.message);
+    return;
+  }
+
+  await supabase.from('agendamentos').update({ pacote_id: novoPacote.id }).eq('id', agendamento.id);
+}
 async function decidir(a, novoStatus){
   if (novoStatus === 'recusado') {
     const quer = confirm('Esta pessoa precisa ser reagendada para outro horário (evita duplicidade)?\n\nOK = Reagendar agora\nCancelar = Apenas recusar, sem reagendar');
@@ -67,7 +113,16 @@ async function decidir(a, novoStatus){
   if (error) { alert('Erro: ' + error.message); return; }
   if (!data || data.length === 0) {
     alert('Este agendamento já foi alterado. A lista vai ser atualizada.');
+    carregarPendentes();
+    return;
   }
+
+  if (novoStatus === 'confirmado') {
+    await processarPacote(data[0]);
+  } else if (novoStatus === 'recusado') {
+    await reverterPacoteSeNecessario(data[0]);
+  }
+
   carregarPendentes();
 }
 
@@ -279,10 +334,11 @@ async function carregarAgendaHoje(){
       const btnCancelarAg = document.createElement('button');
       btnCancelarAg.className = 'btn-no';
       btnCancelarAg.textContent = 'Cancelar';
-      btnCancelarAg.addEventListener('click', async () => {
+       btnCancelarAg.addEventListener('click', async () => {
         if (!confirm('Cancelar este agendamento?')) return;
         const { error } = await supabase.from('agendamentos').update({ status: 'cancelado' }).eq('id', item.id);
         if (error) { alert('Erro ao cancelar: ' + error.message); return; }
+        await reverterPacoteSeNecessario(item);
         carregarAgendaHoje();
       });
       acoes.appendChild(btnCancelarAg);
@@ -459,6 +515,11 @@ async function verificarAcesso(){
   mostrarPainel(membro);
 }
 
+document.getElementById('olho-eq').addEventListener('click', function(){
+  const campo = document.getElementById('eq-senha');
+  campo.type = campo.type === 'password' ? 'text' : 'password';
+  this.textContent = campo.type === 'password' ? '👁️' : '🙈';
+});
 document.getElementById('form-login-equipe').addEventListener('submit', async (e) => {
   e.preventDefault();
 

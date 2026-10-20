@@ -46,6 +46,11 @@ document.getElementById('btn-esqueci').addEventListener('click', async function(
   }
 });
 
+document.getElementById('olho-login').addEventListener('click', function(){
+  const campo = document.getElementById('login-pass');
+  campo.type = campo.type === 'password' ? 'text' : 'password';
+  this.textContent = campo.type === 'password' ? '👁️' : '🙈';
+});
 document.getElementById('go-signup').addEventListener('click', function(){
   window.location.href = 'cadastro.html';
 });

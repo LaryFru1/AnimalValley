@@ -79,6 +79,18 @@ async function cancelarAgendamento(a){
     return;
   }
 
+  if (a.usa_pacote && a.pacote_id) {
+    const { data: pacote } = await supabase
+      .from('pacotes')
+      .select('sessoes_usadas')
+      .eq('id', a.pacote_id)
+      .single();
+
+    if (pacote && pacote.sessoes_usadas === 0) {
+      await supabase.from('pacotes').update({ status: 'cancelado' }).eq('id', a.pacote_id);
+    }
+  }
+
   window.location.reload();
 }
 
