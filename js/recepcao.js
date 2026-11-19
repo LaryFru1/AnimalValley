@@ -256,8 +256,10 @@ async function carregarAgendaHoje(){
 
    const itens = [
     ...(confirmados || []).map(a => ({
-      tipo: 'agendamento',
+           tipo: 'agendamento',
       id: a.id,
+      usa_pacote: a.usa_pacote,
+      pacote_id: a.pacote_id,
       telefone: a.responsaveis ? a.responsaveis.telefone : null,
       horario: a.horario.slice(0,5),
       texto: `${a.responsaveis ? a.responsaveis.nome : ''} · ${a.pets ? a.pets.nome : ''}`,
